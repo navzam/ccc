@@ -21,6 +21,7 @@ public class Cubie {
 	private static final float cubieWidthHalf = cubieWidth/2;
 	
 	public Cubie(int x, int y, int z) {
+		colors = new Side[6];
 		geoms = new Geometry[6];
 		
 		geoms[Side.FRONT.value] = new Geometry("front", new Quad(cubieWidth, cubieWidth));
@@ -52,12 +53,8 @@ public class Cubie {
 		geoms[Side.BOTTOM.value].setLocalTranslation(-cubieWidthHalf, -cubieWidthHalf, -cubieWidthHalf);
 		//geoms[Side.BOTTOM.value].move(0.01f, 0.01f, 0.0f);
 		
-		colors = new Side[6];
 		for(int i = 0; i < 6; ++i)
-		{
-			colors[i] = null;
 			geoms[i].setMaterial(MaterialManager.getMaterial(null));
-		}
 		
 		centerNode = new Node();
 		centerNode.setLocalTranslation(cubieSpaceWidth * (x - 1), cubieSpaceWidth * (y - 1), cubieSpaceWidth * (z - 1));
