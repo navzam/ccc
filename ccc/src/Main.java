@@ -10,6 +10,9 @@ public class Main extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
+		
+		// Disable the default controls
+		this.flyCam.setEnabled(false);
 				
 		// Create default materials
 		Material blueMat = new Material(this.assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
