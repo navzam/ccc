@@ -52,10 +52,10 @@ public class Cubie {
 		geoms[Side.BOTTOM.value].setLocalTranslation(-cubieWidthHalf, -cubieWidthHalf, -cubieWidthHalf);
 		//geoms[Side.BOTTOM.value].move(0.01f, 0.01f, 0.0f);
 		
-		colors = new Color[6];
+		colors = new Side[6];
 		for(int i = 0; i < 6; ++i)
 		{
-			colors[i] = new Color();
+			colors[i] = null;
 			geoms[i].setMaterial(MaterialManager.getMaterial(null));
 		}
 		
@@ -65,12 +65,12 @@ public class Cubie {
 			centerNode.attachChild(geoms[i]);
 	}
 	
-	public void setColor(Side side, Color.ColorName colorName) {
-		colors[side.value].setColor(colorName);
-		geoms[side.value].setMaterial(MaterialManager.getMaterial(side));
+	public void setColor(Side side, Side color) {
+		colors[side.value] = color;
+		geoms[side.value].setMaterial(MaterialManager.getMaterial(color));
 	}
 	
-	public Color getColor(Side side) {
+	public Side getColor(Side side) {
 		return colors[side.value];
 	}
 	
@@ -78,7 +78,7 @@ public class Cubie {
 		return centerNode;
 	}
 	
-	private Color colors[];
+	private Side colors[];
 	private Node centerNode;
 	private Geometry geoms[];
 

@@ -12,22 +12,22 @@ public class Cube {
 		
 		for(int y = 0; y < 3; ++y) {
 			for(int z = 0; z < 3; ++z) {
-				cubies[0][y][z].setColor(Cubie.Side.LEFT, Color.ColorName.BLUE);
-				cubies[2][y][z].setColor(Cubie.Side.RIGHT, Color.ColorName.GREEN);
+				cubies[0][y][z].setColor(Cubie.Side.LEFT, Cubie.Side.LEFT);
+				cubies[2][y][z].setColor(Cubie.Side.RIGHT, Cubie.Side.RIGHT);
 			}
 		}
 		
 		for(int x = 0; x < 3; ++x) {
 			for(int z = 0; z < 3; ++z) {
-				cubies[x][0][z].setColor(Cubie.Side.BOTTOM, Color.ColorName.WHITE);
-				cubies[x][2][z].setColor(Cubie.Side.TOP, Color.ColorName.YELLOW);
+				cubies[x][0][z].setColor(Cubie.Side.BOTTOM, Cubie.Side.BOTTOM);
+				cubies[x][2][z].setColor(Cubie.Side.TOP, Cubie.Side.TOP);
 			}
 		}
 		
 		for(int x = 0; x < 3; ++x) {
 			for(int y = 0; y < 3; ++y) {
-				cubies[x][y][0].setColor(Cubie.Side.BACK, Color.ColorName.ORANGE);
-				cubies[x][y][2].setColor(Cubie.Side.FRONT, Color.ColorName.RED);
+				cubies[x][y][0].setColor(Cubie.Side.BACK, Cubie.Side.BACK);
+				cubies[x][y][2].setColor(Cubie.Side.FRONT, Cubie.Side.FRONT);
 			}
 		}
 	}
