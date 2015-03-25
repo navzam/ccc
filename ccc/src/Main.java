@@ -5,6 +5,8 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 public class Main extends SimpleApplication {
 	
@@ -78,17 +80,27 @@ public class Main extends SimpleApplication {
 			if(!isRotating)
 				return;
 			
+			float angleX = 0.0f;
+			float angleY = 0.0f;
 			if(name.equals("Rotate_Left"))
-				rootNode.rotate(0.0f, value * 4, 0.0f);
+				angleY = value * 4;
 			else if(name.equals("Rotate_Right"))
-				rootNode.rotate(0.0f, -value * 4, 0.0f);
+				angleY = -value * 4;
 			else if(name.equals("Rotate_Up"))
-				rootNode.rotate(value * 4, 0.0f, 0.0f);
+				angleX = value * 4;
 			else if(name.equals("Rotate_Down"))
-				rootNode.rotate(-value * 4, 0.0f, 0.0f);
+				angleX = -value * 4;
+			
+			Quaternion addRot = new Quaternion(angleX, angleY, 0.0f, 1.0f);
+			addRot.multLocal(posVector);
+			addRot.multLocal(upVector);
+			
+			rootNode.lookAt(posVector, upVector);
 		}
 	};
 	
 	private boolean isRotating = false;
+	private Vector3f posVector = new Vector3f(0, 0, 1);
+	private Vector3f upVector = new Vector3f(0, 1, 0);
 
 }
