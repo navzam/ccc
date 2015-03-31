@@ -6,12 +6,18 @@ import com.jme3.scene.shape.Quad;
 public class Cubie {
 	
 	public static enum Side {
-		FRONT(0), BACK(1), LEFT(2), RIGHT(3), TOP(4), BOTTOM(5);
+		FRONT(0, 'F'), BACK(1, 'B'), LEFT(2, 'L'), RIGHT(3, 'R'), TOP(4, 'T'), BOTTOM(5, 'D');
 		
 		public final int value;
+		public final char name;
 		
-		private Side(int value) {
+		private Side(int value, char name) {
 			this.value = value;
+			this.name = name;
+		}
+		
+		public String toString() {
+			return String.valueOf(name);
 		}
 	}
 	
