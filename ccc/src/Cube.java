@@ -32,6 +32,156 @@ public class Cube {
 		}
 	}
 	
+	public void rotateFace(Cubie.Side side, boolean cw) {
+		if(side == Cubie.Side.LEFT || side == Cubie.Side.RIGHT) {
+			this.rotateFaceX(side, cw);
+		}
+		else if(side == Cubie.Side.BOTTOM || side == Cubie.Side.TOP) {
+			this.rotateFaceY(side, cw);
+		}
+		else if(side == Cubie.Side.BACK || side == Cubie.Side.FRONT) {
+			this.rotateFaceZ(side, cw);
+		}
+	}
+	
+	private void rotateFaceX(Cubie.Side side, boolean cw) {
+		if(side != Cubie.Side.LEFT && side != Cubie.Side.RIGHT) {
+			System.err.println("rotateFaceX called incorrectly!");
+			return;
+		}
+		
+		// Rotate cubies array (specific for 3x3x3)
+		int fixedX = side == Cubie.Side.LEFT ? 0 : 2;
+		boolean cubieRotCW;
+		if((side == Cubie.Side.LEFT && cw) || (side == Cubie.Side.RIGHT && !cw)) {
+			Cubie temp = cubies[fixedX][0][0];
+			cubies[fixedX][0][0] = cubies[fixedX][0][2];
+			cubies[fixedX][0][2] = cubies[fixedX][2][2];
+			cubies[fixedX][2][2] = cubies[fixedX][2][0];
+			cubies[fixedX][2][0] = temp;
+			
+			temp = cubies[fixedX][1][0];
+			cubies[fixedX][1][0] = cubies[fixedX][0][1];
+			cubies[fixedX][0][1] = cubies[fixedX][1][2];
+			cubies[fixedX][1][2] = cubies[fixedX][2][1];
+			cubies[fixedX][2][1] = temp;
+			
+			cubieRotCW = false;
+		}
+		else {
+			Cubie temp = cubies[fixedX][0][0];
+			cubies[fixedX][0][0] = cubies[fixedX][2][0];
+			cubies[fixedX][2][0] = cubies[fixedX][2][2];
+			cubies[fixedX][2][2] = cubies[fixedX][0][2];
+			cubies[fixedX][0][2] = temp;
+			
+			temp = cubies[fixedX][1][0];
+			cubies[fixedX][1][0] = cubies[fixedX][2][1];
+			cubies[fixedX][2][1] = cubies[fixedX][1][2];
+			cubies[fixedX][1][2] = cubies[fixedX][0][1];
+			cubies[fixedX][0][1] = temp;
+			
+			cubieRotCW = true;
+		}
+		
+		// Rotate individual cubies
+		for(int y = 0; y < 3; ++y)
+			for(int z = 0; z < 3; ++z)
+				cubies[fixedX][y][z].rotateX(cubieRotCW);
+	}
+	
+	private void rotateFaceY(Cubie.Side side, boolean cw) {
+		if(side != Cubie.Side.TOP && side != Cubie.Side.BOTTOM) {
+			System.err.println("rotateFaceY called incorrectly!");
+			return;
+		}
+		
+		// Rotate cubies array (specific for 3x3x3)
+		int fixedY = side == Cubie.Side.BOTTOM ? 0 : 2;
+		boolean cubieRotCW;
+		if((side == Cubie.Side.BOTTOM && cw) || (side == Cubie.Side.TOP && !cw)) {
+			Cubie temp = cubies[0][fixedY][0];
+			cubies[0][fixedY][0] = cubies[2][fixedY][0];
+			cubies[2][fixedY][0] = cubies[2][fixedY][2];
+			cubies[2][fixedY][2] = cubies[0][fixedY][2];
+			cubies[0][fixedY][2] = temp;
+			
+			temp = cubies[0][fixedY][1];
+			cubies[0][fixedY][1] = cubies[1][fixedY][0];
+			cubies[1][fixedY][0] = cubies[2][fixedY][1];
+			cubies[2][fixedY][1] = cubies[1][fixedY][2];
+			cubies[1][fixedY][2] = temp;
+			
+			cubieRotCW = false;
+		}
+		else {
+			Cubie temp = cubies[0][fixedY][0];
+			cubies[0][fixedY][0] = cubies[0][fixedY][2];
+			cubies[0][fixedY][2] = cubies[2][fixedY][2];
+			cubies[2][fixedY][2] = cubies[2][fixedY][0];
+			cubies[2][fixedY][0] = temp;
+			
+			temp = cubies[0][fixedY][1];
+			cubies[0][fixedY][1] = cubies[1][fixedY][2];
+			cubies[1][fixedY][2] = cubies[2][fixedY][1];
+			cubies[2][fixedY][1] = cubies[1][fixedY][0];
+			cubies[1][fixedY][0] = temp;
+			
+			cubieRotCW = true;
+		}
+		
+		// Rotate individual cubies
+		for(int x = 0; x < 3; ++x)
+			for(int z = 0; z < 3; ++z)
+				cubies[x][fixedY][z].rotateY(cubieRotCW);
+	}
+
+	private void rotateFaceZ(Cubie.Side side, boolean cw) {
+		if(side != Cubie.Side.BACK && side != Cubie.Side.FRONT) {
+			System.err.println("rotateFaceZ called incorrectly!");
+			return;
+		}
+		
+		// Rotate cubies array (specific for 3x3x3)
+		int fixedZ = side == Cubie.Side.BACK ? 0 : 2;
+		boolean cubieRotCW;
+		if((side == Cubie.Side.BACK && cw) || (side == Cubie.Side.FRONT && !cw)) {
+			Cubie temp = cubies[0][0][fixedZ];
+			cubies[0][0][fixedZ] = cubies[0][2][fixedZ];
+			cubies[0][2][fixedZ] = cubies[2][2][fixedZ];
+			cubies[2][2][fixedZ] = cubies[2][0][fixedZ];
+			cubies[2][0][fixedZ] = temp;
+			
+			temp = cubies[0][1][fixedZ];
+			cubies[0][1][fixedZ] = cubies[1][2][fixedZ];
+			cubies[1][2][fixedZ] = cubies[2][1][fixedZ];
+			cubies[2][1][fixedZ] = cubies[1][0][fixedZ];
+			cubies[1][0][fixedZ] = temp;
+			
+			cubieRotCW = false;
+		}
+		else {
+			Cubie temp = cubies[0][0][fixedZ];
+			cubies[0][0][fixedZ] = cubies[2][0][fixedZ];
+			cubies[2][0][fixedZ] = cubies[2][2][fixedZ];
+			cubies[2][2][fixedZ] = cubies[0][2][fixedZ];
+			cubies[0][2][fixedZ] = temp;
+			
+			temp = cubies[0][1][fixedZ];
+			cubies[0][1][fixedZ] = cubies[1][0][fixedZ];
+			cubies[1][0][fixedZ] = cubies[2][1][fixedZ];
+			cubies[2][1][fixedZ] = cubies[1][2][fixedZ];
+			cubies[1][2][fixedZ] = temp;
+			
+			cubieRotCW = true;
+		}
+		
+		// Rotate individual cubies
+		for(int x = 0; x < 3; ++x)
+			for(int y = 0; y < 3; ++y)
+				cubies[x][y][fixedZ].rotateZ(cubieRotCW);
+	}
+	
 	public Cubie getCubie(int x, int y, int z) {
 		if(x < 0 || x > 2 || y < 0 || y > 2 || z < 0 || z > 2)
 		{

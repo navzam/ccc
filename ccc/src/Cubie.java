@@ -68,6 +68,39 @@ public class Cubie {
 			centerNode.attachChild(geoms[i]);
 	}
 	
+	public void rotateX(boolean cw) {
+		if(cw)
+			this.rotateFromArray(new int[] {Side.FRONT.value, Side.BOTTOM.value, Side.BACK.value, Side.TOP.value});
+		else
+			this.rotateFromArray(new int[] {Side.FRONT.value, Side.TOP.value, Side.BACK.value, Side.BOTTOM.value});
+	}
+	
+	public void rotateY(boolean cw) {
+		if(cw)
+			this.rotateFromArray(new int[] {Side.FRONT.value, Side.RIGHT.value, Side.BACK.value, Side.LEFT.value});
+		else
+			this.rotateFromArray(new int[] {Side.FRONT.value, Side.LEFT.value, Side.BACK.value, Side.RIGHT.value});
+	}
+	
+	public void rotateZ(boolean cw) {
+		if(cw)
+			this.rotateFromArray(new int[] {Side.TOP.value, Side.LEFT.value, Side.BOTTOM.value, Side.RIGHT.value});
+		else
+			this.rotateFromArray(new int[] {Side.TOP.value, Side.RIGHT.value, Side.BOTTOM.value, Side.LEFT.value});
+	}
+	
+	private void rotateFromArray(int[] arr) {
+		if(arr.length != 4) {
+			System.err.println("rotateFromArray called incorrectly!");
+			return;
+		}
+		
+		Side temp = colors[arr[0]];
+		for(int i = 0; i < 3; ++i)
+			colors[arr[i]] = colors[arr[i+1]];
+		colors[arr[3]] = temp;
+	}
+	
 	public void setColor(Side side, Side color) {
 		colors[side.value] = color;
 		geoms[side.value].setMaterial(MaterialManager.getMaterial(color));
