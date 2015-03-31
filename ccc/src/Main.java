@@ -7,11 +7,21 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.system.AppSettings;
 
 public class Main extends SimpleApplication {
 	
 	public static void main(String[] args) {
+		// Setup default settings
+		AppSettings settings = new AppSettings(true);
+		settings.setTitle("CCC");
+		settings.setResolution(800, 600);
+		settings.setSamples(16);
+		settings.setVSync(true);
+		
 		Main app = new Main();
+		app.setSettings(settings);
+		app.setShowSettings(true);
 		app.start();
 	}
 
