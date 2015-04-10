@@ -26,9 +26,6 @@ public class Cubie {
 	private static final float cubieWidthHalf = cubieWidth/2;
 	
 	public Cubie(int x, int y, int z) {
-		colors = new Side[6];
-		geoms = new Geometry[6];
-		
 		geoms[Side.FRONT.value] = new Geometry("front", new Quad(cubieWidth, cubieWidth));
 		geoms[Side.FRONT.value].setLocalTranslation(-cubieWidthHalf, -cubieWidthHalf, cubieWidthHalf);
 		
@@ -55,7 +52,6 @@ public class Cubie {
 		for(int i = 0; i < 6; ++i)
 			geoms[i].setMaterial(MaterialManager.getMaterial(null));
 		
-		centerNode = new Node();
 		centerNode.setLocalTranslation(cubieSpaceWidth * (x - 1), cubieSpaceWidth * (y - 1), cubieSpaceWidth * (z - 1));
 		for(int i = 0; i < 6; ++i)
 			centerNode.attachChild(geoms[i]);
@@ -63,26 +59,26 @@ public class Cubie {
 		this.setPos(x, y, z);
 	}
 	
-	public void rotate(int axis, boolean cw) {
+	public void rotate(AxisVector.Axis axis, boolean cw) {
 		final float rotAmt = FastMath.HALF_PI;
 		
 		// Calculate rotation vector based on state vectors
 		int[] rotVector = {0, 0, 0};
-		if(upVector[axis] != 0)
-			rotVector[1] = upVector[axis];
-		else if(outVector[axis] != 0)
-			rotVector[2] = outVector[axis];
+		if(upVector.getAxisValue(axis) != 0)
+			rotVector[1] = upVector.getAxisValue(axis);
+		else if(outVector.getAxisValue(axis) != 0)
+			rotVector[2] = outVector.getAxisValue(axis);
 		else {
-			int[] sideVector = this.crossVectors(upVector, outVector);
-			if(sideVector[axis] != 0)
-				rotVector[0] = sideVector[axis];
+			AxisVector sideVector = AxisVector.cross(upVector, outVector);
+			if(sideVector.getAxisValue(axis) != 0)
+				rotVector[0] = sideVector.getAxisValue(axis);
 		}
 		
 		// Logical rotation (colors)
 		int[] rotColorArr;
-		if(axis == 0)
+		if(axis == AxisVector.Axis.X_AXIS)
 			rotColorArr = new int[] {Side.FRONT.value, Side.TOP.value, Side.BACK.value, Side.BOTTOM.value};
-		else if(axis == 1)
+		else if(axis == AxisVector.Axis.Y_AXIS)
 			rotColorArr = new int[] {Side.FRONT.value, Side.LEFT.value, Side.BACK.value, Side.RIGHT.value};
 		else
 			rotColorArr = new int[] {Side.TOP.value, Side.RIGHT.value, Side.BOTTOM.value, Side.LEFT.value};
@@ -98,12 +94,11 @@ public class Cubie {
 		centerNode.rotate(rotAmt * rotVector[0] * multiplier, rotAmt * rotVector[1] * multiplier, rotAmt * rotVector[2] * multiplier);
 		
 		// Update state vectors as needed
-		int[] stateCrosser = {0, 0, 0};
-		stateCrosser[axis] = multiplier;
-		if(outVector[axis] == 0)
-			outVector = this.crossVectors(stateCrosser, outVector);
-		if(upVector[axis] == 0)
-			upVector = this.crossVectors(stateCrosser, upVector);
+		AxisVector stateCrosser = new AxisVector(axis, cw);
+		if(outVector.getAxisValue(axis) == 0)
+			outVector.crossFront(stateCrosser);
+		if(upVector.getAxisValue(axis) == 0)
+			upVector.crossFront(stateCrosser);
 	}
 	
 	public void setColor(Side side, Side color) {
@@ -138,14 +133,10 @@ public class Cubie {
 		colors[arr[3]] = temp;
 	}
 	
-	private int[] crossVectors(int[] u, int[] v) {
-		return new int[] {u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]};
-	}
-	
-	private Side colors[];
-	private Node centerNode;
-	private Geometry geoms[];
-	private int outVector[] = {0, 0, 1};
-	private int upVector[] = {0, 1, 0};
+	private Side colors[] = new Side[6];
+	private Node centerNode = new Node();
+	private Geometry geoms[] = new Geometry[6];
+	private AxisVector outVector = new AxisVector(AxisVector.Axis.Z_AXIS, false);
+	private AxisVector upVector = new AxisVector(AxisVector.Axis.Y_AXIS, false);
 
 }
