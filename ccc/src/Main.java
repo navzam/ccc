@@ -75,6 +75,17 @@ public class Main extends SimpleApplication {
 					this.rootNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
 	}
 	
+	private void initInput() {
+		this.inputManager.addMapping(MAPPING_ROTATE, TRIGGER_ROTATE);
+		this.inputManager.addMapping(MAPPING_ROTATE_LEFT, TRIGGER_ROTATE_LEFT);
+		this.inputManager.addMapping(MAPPING_ROTATE_RIGHT, TRIGGER_ROTATE_RIGHT);
+		this.inputManager.addMapping(MAPPING_ROTATE_UP, TRIGGER_ROTATE_UP);
+		this.inputManager.addMapping(MAPPING_ROTATE_DOWN, TRIGGER_ROTATE_DOWN);
+		
+		this.inputManager.addListener(clickListener, MAPPING_ROTATE);
+		this.inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
+	}
+	
 	@Override
 	public void simpleUpdate(float tpf) {
 		// If the cube is currently rotating
@@ -143,17 +154,6 @@ public class Main extends SimpleApplication {
 				moveY = 0.0f;
 			}
 		}
-	}
-	
-	private void initInput() {
-		this.inputManager.addMapping(MAPPING_ROTATE, TRIGGER_ROTATE);
-		this.inputManager.addMapping(MAPPING_ROTATE_LEFT, TRIGGER_ROTATE_LEFT);
-		this.inputManager.addMapping(MAPPING_ROTATE_RIGHT, TRIGGER_ROTATE_RIGHT);
-		this.inputManager.addMapping(MAPPING_ROTATE_UP, TRIGGER_ROTATE_UP);
-		this.inputManager.addMapping(MAPPING_ROTATE_DOWN, TRIGGER_ROTATE_DOWN);
-		
-		this.inputManager.addListener(clickListener, MAPPING_ROTATE);
-		this.inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
 	}
 	
 	private ActionListener clickListener = new ActionListener() {
