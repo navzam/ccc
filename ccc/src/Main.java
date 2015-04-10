@@ -89,10 +89,14 @@ public class Main extends SimpleApplication {
 	
 	@Override
 	public void simpleUpdate(float tpf) {
+		// Nothing to update if the mouse hasn't dragged
+		if(dragX == 0.0f && dragY == 0.0f)
+			return;
+		
 		// If the cube is currently rotating
 		if(isCubeRotating) {
 			// Apply rotation to direction vectors
-			Quaternion addRot = new Quaternion(moveY * 4, -moveX * 4, 0.0f, 1.0f);
+			Quaternion addRot = new Quaternion(dragY * 4, -dragX * 4, 0.0f, 1.0f);
 			addRot.multLocal(posVector);
 			addRot.multLocal(upVector);
 			
@@ -100,20 +104,20 @@ public class Main extends SimpleApplication {
 			rootNode.lookAt(posVector, upVector);
 			
 			// Reset movement variables
-			moveX = 0.0f;
-			moveY = 0.0f;
+			dragX = 0.0f;
+			dragY = 0.0f;
 		}
 		// If a face is currently rotating
 		else if(isFaceRotating) {
 			// If a face has not yet been chosen
 			if(!isFaceChosen) {
 				// If we are ready to choose a face
-				if(Math.abs(moveX) > 0.01f || Math.abs(moveY) > 0.01f) {
+				if(Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f) {
 					isFaceChosen = true;
 					
 					// Determine which face to rotate
 					Vector3f cross = new Vector3f();
-					chosenNormVector.cross(moveX, moveY, 0.0f, cross);
+					chosenNormVector.cross(dragX, dragY, 0.0f, cross);
 					
 					final float[] crossAbs = {Math.abs(cross.dot(upVector.cross(posVector))), Math.abs(cross.dot(upVector)), Math.abs(cross.dot(posVector))};
 					chosenAxis = 0;
@@ -141,7 +145,7 @@ public class Main extends SimpleApplication {
 			// A face has been chosen
 			else {
 				Vector3f cross = new Vector3f();
-				chosenNormVector.cross(moveX, moveY, 0.0f, cross);
+				chosenNormVector.cross(dragX, dragY, 0.0f, cross);
 				
 				final float speedMultiplier = 6.0f;
 				if(chosenAxis == 0)
@@ -151,8 +155,8 @@ public class Main extends SimpleApplication {
 				else if(chosenAxis == 2)
 					rotationNode.rotate(0.0f, 0.0f, -cross.dot(posVector) * speedMultiplier);	
 				
-				moveX = 0.0f;
-				moveY = 0.0f;
+				dragX = 0.0f;
+				dragY = 0.0f;
 			}
 		}
 	}
@@ -252,13 +256,13 @@ public class Main extends SimpleApplication {
 				return;
 			
 			if(name.equals(MAPPING_ROTATE_LEFT))
-				moveX -= value;
+				dragX -= value;
 			else if(name.equals(MAPPING_ROTATE_RIGHT))
-				moveX += value;
+				dragX += value;
 			else if(name.equals(MAPPING_ROTATE_UP))
-				moveY += value;
+				dragY += value;
 			else if(name.equals(MAPPING_ROTATE_DOWN))
-				moveY -= value;
+				dragY -= value;
 		}
 	};
 	
@@ -289,6 +293,6 @@ public class Main extends SimpleApplication {
 	private Vector3f posVector = new Vector3f(0, 0, 1);
 	private Vector3f upVector = new Vector3f(0, 1, 0);
 	
-	private float moveX = 0.0f;
-	private float moveY = 0.0f;
+	private float dragX = 0.0f;
+	private float dragY = 0.0f;
 }
