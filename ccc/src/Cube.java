@@ -86,8 +86,10 @@ public class Cube {
 		
 		// Rotate individual cubies
 		for(int y = 0; y < 3; ++y)
-			for(int z = 0; z < 3; ++z)
-				cubies[fixedX][y][z].rotateX(cubieRotCW);
+			for(int z = 0; z < 3; ++z) {
+				cubies[fixedX][y][z].rotate(0, cubieRotCW);
+				cubies[fixedX][y][z].setPos(fixedX, y, z);
+			}
 	}
 	
 	private void rotateFaceY(Cubie.Side side, boolean cw) {
@@ -132,8 +134,10 @@ public class Cube {
 		
 		// Rotate individual cubies
 		for(int x = 0; x < 3; ++x)
-			for(int z = 0; z < 3; ++z)
-				cubies[x][fixedY][z].rotateY(cubieRotCW);
+			for(int z = 0; z < 3; ++z) {
+				cubies[x][fixedY][z].rotate(1, cubieRotCW);
+				cubies[x][fixedY][z].setPos(x, fixedY, z);
+			}
 	}
 
 	private void rotateFaceZ(Cubie.Side side, boolean cw) {
@@ -178,8 +182,10 @@ public class Cube {
 		
 		// Rotate individual cubies
 		for(int x = 0; x < 3; ++x)
-			for(int y = 0; y < 3; ++y)
-				cubies[x][y][fixedZ].rotateZ(cubieRotCW);
+			for(int y = 0; y < 3; ++y) {
+				cubies[x][y][fixedZ].rotate(2, cubieRotCW);
+				cubies[x][y][fixedZ].setPos(x, y, fixedZ);
+			}
 	}
 	
 	public Cubie getCubie(int x, int y, int z) {
