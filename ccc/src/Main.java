@@ -15,6 +15,7 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
 public class Main extends SimpleApplication {
@@ -163,8 +164,8 @@ public class Main extends SimpleApplication {
 				if(keyPressed) {
 					// Calculate collisions with cubies
 					Vector2f click2d = inputManager.getCursorPosition();
-					Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0.0f).clone();
-					Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1.0f).subtractLocal(click3d).normalizeLocal();
+					Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0.0f);
+					Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1.0f).subtractLocal(click3d);
 					
 					Ray ray = new Ray(click3d, dir);
 					CollisionResults results = new CollisionResults();
@@ -173,19 +174,17 @@ public class Main extends SimpleApplication {
 					// If a cubie was clicked
 					if(results.size() != 0) {
 						CollisionResult res = results.getClosestCollision();
-						Vector3f contactNormal = res.getContactNormal();
+						chosenNormVector = res.getContactNormal();
 						
-						chosenCubiePos[0] = res.getGeometry().getParent().getUserData(Cubie.KEY_X_POS);
-						chosenCubiePos[1] = res.getGeometry().getParent().getUserData(Cubie.KEY_Y_POS); 
-						chosenCubiePos[2] = res.getGeometry().getParent().getUserData(Cubie.KEY_Z_POS);
+						Spatial clickedNode = res.getGeometry().getParent();
+						chosenCubiePos[0] = clickedNode.getUserData(Cubie.KEY_X_POS);
+						chosenCubiePos[1] = clickedNode.getUserData(Cubie.KEY_Y_POS);
+						chosenCubiePos[2] = clickedNode.getUserData(Cubie.KEY_Z_POS);
 						
-						chosenNormVector = contactNormal;
-					}
-					
-					if(results.size() == 0)
-						isCubeRotating = true;
-					else
 						isFaceRotating = true;
+					}
+					else
+						isCubeRotating = true;
 				}
 				// If rotate trigger was released
 				else {
