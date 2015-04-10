@@ -7,6 +7,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.input.controls.Trigger;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -145,19 +146,19 @@ public class Main extends SimpleApplication {
 	}
 	
 	private void initInput() {
-		this.inputManager.addMapping("Rotate_Trigger", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		this.inputManager.addMapping("Rotate_Left", new MouseAxisTrigger(MouseInput.AXIS_X, false));
-		this.inputManager.addMapping("Rotate_Right", new MouseAxisTrigger(MouseInput.AXIS_X, true));
-		this.inputManager.addMapping("Rotate_Up", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
-		this.inputManager.addMapping("Rotate_Down", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
+		this.inputManager.addMapping(MAPPING_ROTATE, TRIGGER_ROTATE);
+		this.inputManager.addMapping(MAPPING_ROTATE_LEFT, TRIGGER_ROTATE_LEFT);
+		this.inputManager.addMapping(MAPPING_ROTATE_RIGHT, TRIGGER_ROTATE_RIGHT);
+		this.inputManager.addMapping(MAPPING_ROTATE_UP, TRIGGER_ROTATE_UP);
+		this.inputManager.addMapping(MAPPING_ROTATE_DOWN, TRIGGER_ROTATE_DOWN);
 		
-		this.inputManager.addListener(clickListener, "Rotate_Trigger");
-		this.inputManager.addListener(moveListener, "Rotate_Left", "Rotate_Right", "Rotate_Up", "Rotate_Down");
+		this.inputManager.addListener(clickListener, MAPPING_ROTATE);
+		this.inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
 	}
 	
 	private ActionListener clickListener = new ActionListener() {
 		public void onAction(String name, boolean keyPressed, float tpf) {
-			if(name.equals("Rotate_Trigger")) {
+			if(name.equals(MAPPING_ROTATE)) {
 				// If rotate trigger was pressed
 				if(keyPressed) {
 					// Calculate collisions with cubies
@@ -174,9 +175,9 @@ public class Main extends SimpleApplication {
 						CollisionResult res = results.getClosestCollision();
 						Vector3f contactNormal = res.getContactNormal();
 						
-						chosenCubiePos[0] = res.getGeometry().getParent().getUserData("x_pos");
-						chosenCubiePos[1] = res.getGeometry().getParent().getUserData("y_pos"); 
-						chosenCubiePos[2] = res.getGeometry().getParent().getUserData("z_pos");
+						chosenCubiePos[0] = res.getGeometry().getParent().getUserData(Cubie.KEY_X_POS);
+						chosenCubiePos[1] = res.getGeometry().getParent().getUserData(Cubie.KEY_Y_POS); 
+						chosenCubiePos[2] = res.getGeometry().getParent().getUserData(Cubie.KEY_Z_POS);
 						
 						chosenNormVector = contactNormal;
 					}
@@ -251,16 +252,28 @@ public class Main extends SimpleApplication {
 			if(!isCubeRotating && !isFaceRotating)
 				return;
 			
-			if(name.equals("Rotate_Left"))
+			if(name.equals(MAPPING_ROTATE_LEFT))
 				moveX -= value;
-			else if(name.equals("Rotate_Right"))
+			else if(name.equals(MAPPING_ROTATE_RIGHT))
 				moveX += value;
-			else if(name.equals("Rotate_Up"))
+			else if(name.equals(MAPPING_ROTATE_UP))
 				moveY += value;
-			else if(name.equals("Rotate_Down"))
+			else if(name.equals(MAPPING_ROTATE_DOWN))
 				moveY -= value;
 		}
 	};
+	
+	private final static Trigger TRIGGER_ROTATE = new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
+	private final static Trigger TRIGGER_ROTATE_LEFT = new MouseAxisTrigger(MouseInput.AXIS_X, false);
+	private final static Trigger TRIGGER_ROTATE_RIGHT = new MouseAxisTrigger(MouseInput.AXIS_X, true);
+	private final static Trigger TRIGGER_ROTATE_UP = new MouseAxisTrigger(MouseInput.AXIS_Y, true);
+	private final static Trigger TRIGGER_ROTATE_DOWN = new MouseAxisTrigger(MouseInput.AXIS_Y, false);
+	
+	private final static String MAPPING_ROTATE = "Rotate Start";
+	private final static String MAPPING_ROTATE_LEFT = "Rotate Left";
+	private final static String MAPPING_ROTATE_RIGHT = "Rotate Right";
+	private final static String MAPPING_ROTATE_UP = "Rotate Up";
+	private final static String MAPPING_ROTATE_DOWN = "Rotate Down";
 	
 	private Cube cube;
 	

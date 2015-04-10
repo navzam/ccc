@@ -21,6 +21,10 @@ public class Cubie {
 		}
 	}
 	
+	public static final String KEY_X_POS = "x_pos";
+	public static final String KEY_Y_POS = "y_pos";
+	public static final String KEY_Z_POS = "z_pos";
+	
 	private static final float cubieSpaceWidth = 1.0f;
 	private static final float cubieWidth = 0.98f;
 	private static final float cubieWidthHalf = cubieWidth/2;
@@ -115,9 +119,9 @@ public class Cubie {
 	}
 	
 	public void setPos(int x, int y, int z) {
-		centerNode.setUserData("x_pos", x);
-		centerNode.setUserData("y_pos", y);
-		centerNode.setUserData("z_pos", z);
+		centerNode.setUserData(KEY_X_POS, x);
+		centerNode.setUserData(KEY_Y_POS, y);
+		centerNode.setUserData(KEY_Z_POS, z);
 		centerNode.setLocalTranslation(x - 1, y - 1, z - 1);
 	}
 
