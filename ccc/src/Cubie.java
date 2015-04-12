@@ -52,7 +52,7 @@ public class Cubie {
 		geoms[Side.BOTTOM.value] = new Geometry("bottom", new Quad(cubieWidth, cubieWidth));
 		geoms[Side.BOTTOM.value].rotate(90 * FastMath.DEG_TO_RAD, 0.0f, 0.0f);
 		geoms[Side.BOTTOM.value].setLocalTranslation(-cubieWidthHalf, -cubieWidthHalf, -cubieWidthHalf);
-				
+		
 		for(int i = 0; i < 6; ++i)
 			geoms[i].setMaterial(MaterialManager.getMaterial(null));
 		
