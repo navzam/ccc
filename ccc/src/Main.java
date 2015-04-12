@@ -1,6 +1,7 @@
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
 
 public class Main extends SimpleApplication {
@@ -23,6 +24,8 @@ public class Main extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		setupDefaultMats();
+		
+		Main.niftyDisplay = new NiftyJmeDisplay(this.assetManager, this.inputManager, this.audioRenderer, this.guiViewPort);
 		
 		// Attach the start screen state
 		this.stateManager.attach(new StartScreenAppState());
@@ -60,5 +63,7 @@ public class Main extends SimpleApplication {
 		MaterialManager.setMaterial(Cubie.Side.BOTTOM, whiteMat);
 		MaterialManager.setMaterial(null, blackMat);
 	}
+	
+	public static NiftyJmeDisplay niftyDisplay;
 	
 }

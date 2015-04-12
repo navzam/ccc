@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -16,20 +18,27 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-public class CubeAppState extends AbstractAppState {
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+
+public class CubeAppState extends AbstractAppState implements ScreenController {
 	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
+		
+		sApp = (SimpleApplication)app;
+		this.cam = sApp.getCamera();
+		this.inputManager = sApp.getInputManager();
+		
 		// Disable the default controls
-		SimpleApplication sApp = (SimpleApplication)app;
 		sApp.getFlyByCamera().setEnabled(false);
-		this.cam = app.getCamera();
-		this.inputManager = app.getInputManager();
 
 		// Add mappings and listeners to input manager
 		initInput();
@@ -42,6 +51,11 @@ public class CubeAppState extends AbstractAppState {
 					this.cubeNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
 		
 		sApp.getRootNode().attachChild(this.cubeNode);
+		
+		// Set up overlay
+		niftyDisplay = Main.niftyDisplay;
+		niftyDisplay.getNifty().fromXml("Interface/screen.xml", "overlay", this);
+		sApp.getGuiViewPort().addProcessor(niftyDisplay);
 	}
 
 	private void initInput() {
@@ -58,6 +72,8 @@ public class CubeAppState extends AbstractAppState {
 	@Override
 	public void cleanup() {
 		super.cleanup();
+		
+		sApp.getGuiViewPort().removeProcessor(niftyDisplay);
 	}
 
 	@Override
@@ -244,13 +260,42 @@ public class CubeAppState extends AbstractAppState {
 		}
 	};
 	
+	public void scrambleCube() {
+		final Random random = new Random();
+		final int numMoves = 100;
+		final Cubie.Side[] sides = Cubie.Side.values();
+		
+		for(int i = 0; i < numMoves; ++i) {
+			final int side = random.nextInt(6);
+			final int numTurns = random.nextInt(3) + 1;
+			
+			for(int turn = 0; turn < numTurns; ++turn)
+				cube.rotateFace(sides[side], false);
+		}
+	}
+	
 	public Node getCubeNode() {
 		return cubeNode;
+	}
+	
+	@Override
+	public void bind(Nifty nifty, Screen screen) {
+	}
+
+	@Override
+	public void onEndScreen() {
+	}
+
+	@Override
+	public void onStartScreen() {		
 	}
 
 	private InputManager inputManager;
 	private Camera cam;
 	private Node cubeNode = new Node();
+	
+	private SimpleApplication sApp;
+	private NiftyJmeDisplay niftyDisplay;
 
 	private Cube cube;
 

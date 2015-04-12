@@ -20,7 +20,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		this.app = (SimpleApplication)app;
 		this.app.getFlyByCamera().setEnabled(false);
 		
-		niftyDisplay = new NiftyJmeDisplay(this.app.getAssetManager(), this.app.getInputManager(), this.app.getAudioRenderer(), this.app.getGuiViewPort());
+		niftyDisplay = Main.niftyDisplay;
 		niftyDisplay.getNifty().fromXml("Interface/screen.xml", "start", this);
 		this.app.getGuiViewPort().addProcessor(niftyDisplay);
 		
