@@ -4,8 +4,11 @@
  	<useControls filename="nifty-default-controls.xml" />
 	<screen id="start" controller="StartScreenAppState">
 		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
-			<panel id="panel_main" height="80%" width="100%" align="center" childLayout="vertical">
+			<panel id="panel_top" height="30%" width="100%" align="center" childLayout="vertical">
 				<text text="Cool Computer Cube" font="Interface/Fonts/Default.fnt" width="100%" height="70%" />
+			</panel>
+			<panel id="panel_mid" height="50%" width="100%" />
+			<panel id="panel_bottom" height="20%" width="100%" align="center" childLayout="vertical">
 				<control name="button" label="Free play" id="FreePlayButton" align="center" valign="center">
 					<interact onClick="switchToFreePlay()" />
 				</control>
@@ -13,7 +16,7 @@
 				<control name="button" label="Quit" id="QuitButton" align="center" valign="center">
 					<interact onClick="quitGame()" />
 				</control>
-			</panel>"
+			</panel>
 		</layer>
 	</screen>
 </nifty>
