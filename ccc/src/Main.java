@@ -16,12 +16,12 @@ public class Main extends SimpleApplication {
 		Main app = new Main();
 		app.setSettings(settings);
 		app.setShowSettings(true);
-		app.stateManager.attach(new CubeAppState());
 		app.start();
 	}
 
 	@Override
 	public void simpleInitApp() {
+		this.stateManager.attach(new StartScreenAppState());
 	}
 	
 	@Override

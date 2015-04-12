@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+	<useStyles filename="nifty-default-styles.xml" />
+ 	<useControls filename="nifty-default-controls.xml" />
+	<screen id="start" controller="StartScreenAppState">
+		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
+			<panel id="panel_main" height="80%" width="100%" align="center" childLayout="vertical">
+				<text text="Cool Computer Cube" font="Interface/Fonts/Default.fnt" width="100%" height="70%" />
+				<control name="button" label="Free play" id="FreePlayButton" align="center" valign="center">
+					<interact onClick="switchToFreePlay()" />
+				</control>
+				<control name="button" label="Settings" id="SettingsButton" align="center" valign="center" />
+				<control name="button" label="Quit" id="QuitButton" align="center" valign="center">
+					<interact onClick="quitGame()" />
+				</control>
+			</panel>"
+		</layer>
+	</screen>
+</nifty>
