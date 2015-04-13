@@ -13,8 +13,16 @@ public class NiftyAppState extends AbstractAppState {
 		sApp = (SimpleApplication)app;
 		
 		sApp.getFlyByCamera().setEnabled(false);
+		
 		niftyDisplay = new NiftyJmeDisplay(sApp.getAssetManager(), sApp.getInputManager(), sApp.getAudioRenderer(), sApp.getGuiViewPort());
-		niftyDisplay.getNifty().addXml("Interface/screen.xml");
+		final String xmlFilename = "Interface/screen.xml";
+		try {
+			niftyDisplay.getNifty().validateXml(xmlFilename);
+		} catch (Exception e) {
+			System.err.println("XML failed validation!");
+			e.printStackTrace();
+		}
+		niftyDisplay.getNifty().addXml(xmlFilename);
 		sApp.getGuiViewPort().addProcessor(niftyDisplay);
 		
 		// Load initial state and attach corresponding state
