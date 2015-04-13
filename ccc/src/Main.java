@@ -1,7 +1,6 @@
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
-import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
 
 public class Main extends SimpleApplication {
@@ -25,10 +24,13 @@ public class Main extends SimpleApplication {
 	public void simpleInitApp() {
 		setupDefaultMats();
 		
-		Main.niftyDisplay = new NiftyJmeDisplay(this.assetManager, this.inputManager, this.audioRenderer, this.guiViewPort);
+		//Disable the default fly camera
+		flyCam.setEnabled(false);
 		
-		// Attach the start screen state
-		this.stateManager.attach(new StartScreenAppState());
+		// Attach the nifty state
+		NiftyAppState niftyState = new NiftyAppState();
+		niftyState.setInitialScreen("start");
+		this.stateManager.attach(niftyState);
 	}
 	
 	@Override
@@ -63,7 +65,5 @@ public class Main extends SimpleApplication {
 		MaterialManager.setMaterial(Cubie.Side.BOTTOM, whiteMat);
 		MaterialManager.setMaterial(null, blackMat);
 	}
-	
-	public static NiftyJmeDisplay niftyDisplay;
-	
+		
 }

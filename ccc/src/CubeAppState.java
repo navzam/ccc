@@ -18,7 +18,6 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -33,12 +32,9 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
 		
-		sApp = (SimpleApplication)app;
+		SimpleApplication sApp = (SimpleApplication)app;
 		this.cam = sApp.getCamera();
 		this.inputManager = sApp.getInputManager();
-		
-		// Disable the default controls
-		sApp.getFlyByCamera().setEnabled(false);
 
 		// Add mappings and listeners to input manager
 		initInput();
@@ -51,11 +47,6 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 					this.cubeNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
 		
 		sApp.getRootNode().attachChild(this.cubeNode);
-		
-		// Set up overlay
-		niftyDisplay = Main.niftyDisplay;
-		niftyDisplay.getNifty().fromXml("Interface/screen.xml", "overlay", this);
-		sApp.getGuiViewPort().addProcessor(niftyDisplay);
 	}
 
 	private void initInput() {
@@ -72,8 +63,6 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	@Override
 	public void cleanup() {
 		super.cleanup();
-		
-		sApp.getGuiViewPort().removeProcessor(niftyDisplay);
 	}
 
 	@Override
@@ -293,9 +282,6 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	private InputManager inputManager;
 	private Camera cam;
 	private Node cubeNode = new Node();
-	
-	private SimpleApplication sApp;
-	private NiftyJmeDisplay niftyDisplay;
 
 	private Cube cube;
 
