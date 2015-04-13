@@ -39,6 +39,9 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		super.cleanup();
 		
 		sApp.getRootNode().detachChild(this.cubeNode);
+		this.cubeNode.detachAllChildren();
+		this.cubeNode = null;
+		this.sApp = null;
 	}
 
 	@Override

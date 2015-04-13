@@ -15,7 +15,7 @@ public class NiftyAppState extends AbstractAppState {
 		sApp.getFlyByCamera().setEnabled(false);
 		niftyDisplay = new NiftyJmeDisplay(sApp.getAssetManager(), sApp.getInputManager(), sApp.getAudioRenderer(), sApp.getGuiViewPort());
 		niftyDisplay.getNifty().addXml("Interface/screen.xml");
-		app.getGuiViewPort().addProcessor(niftyDisplay);
+		sApp.getGuiViewPort().addProcessor(niftyDisplay);
 		
 		// Load initial state and attach corresponding state
 		AbstractAppState initialState = (AbstractAppState)loadScreen(this.initialScreen);
@@ -32,6 +32,7 @@ public class NiftyAppState extends AbstractAppState {
 		
 		niftyDisplay = null;
 		sApp = null;
+		initialScreen = null;
 	}
 	
 	public ScreenController loadScreen(String screen) {

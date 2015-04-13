@@ -32,7 +32,7 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
 		
-		SimpleApplication sApp = (SimpleApplication)app;
+		this.sApp = (SimpleApplication)app;
 		this.cam = sApp.getCamera();
 		this.inputManager = sApp.getInputManager();
 
@@ -63,6 +63,26 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	@Override
 	public void cleanup() {
 		super.cleanup();
+		
+		sApp.getRootNode().detachChild(this.cubeNode);
+		this.cubeNode.detachAllChildren();
+		cube = null;
+		
+		cleanupInput();
+		
+		this.inputManager = null;
+		this.cam = null;
+	}
+	
+	private void cleanupInput() {
+		inputManager.removeListener(clickListener);
+		inputManager.removeListener(moveListener);
+		
+		inputManager.deleteMapping(MAPPING_ROTATE);
+		inputManager.deleteMapping(MAPPING_ROTATE_LEFT);
+		inputManager.deleteMapping(MAPPING_ROTATE_RIGHT);
+		inputManager.deleteMapping(MAPPING_ROTATE_UP);
+		inputManager.deleteMapping(MAPPING_ROTATE_DOWN);
 	}
 
 	@Override
@@ -278,7 +298,8 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	@Override
 	public void onStartScreen() {		
 	}
-
+	
+	private SimpleApplication sApp;
 	private InputManager inputManager;
 	private Camera cam;
 	private Node cubeNode = new Node();
