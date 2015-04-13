@@ -11,9 +11,7 @@ public class NiftyAppState extends AbstractAppState {
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		sApp = (SimpleApplication)app;
-		
-		sApp.getFlyByCamera().setEnabled(false);
-		
+				
 		niftyDisplay = new NiftyJmeDisplay(sApp.getAssetManager(), sApp.getInputManager(), sApp.getAudioRenderer(), sApp.getGuiViewPort());
 		final String xmlFilename = "Interface/screen.xml";
 		try {
