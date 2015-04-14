@@ -4,6 +4,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 
+import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 public class NiftyAppState extends AbstractAppState {
@@ -48,6 +49,10 @@ public class NiftyAppState extends AbstractAppState {
 	
 	public void setInitialScreen(String initialScreen) {
 		this.initialScreen = initialScreen;
+	}
+	
+	public Screen getScreen(String screen) {
+		return niftyDisplay.getNifty().getScreen(screen);
 	}
 	
 	private NiftyJmeDisplay niftyDisplay;

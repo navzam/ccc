@@ -1,11 +1,22 @@
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.CheckBox;
+import de.lessvoid.nifty.controls.DropDown;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
@@ -61,6 +72,102 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		AbstractAppState nextState = (AbstractAppState)niftyState.loadScreen("overlay");
 		sApp.getStateManager().attach(nextState);
 		sApp.getStateManager().detach(this);
+	}
+	
+	public void openSettings() {		
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		Screen screen = niftyState.getScreen("start");
+		
+		// Make the settings layer visible
+		Element sLayer = screen.findElementByName("layer_settings");
+		sLayer.setVisible(true);
+		
+		// Retreive current settings
+		AppSettings settings = sApp.getContext().getSettings();
+		final boolean isFullscreen = settings.isFullscreen();
+		final boolean isVSync = settings.isVSync();
+		final int currHeight = settings.getHeight();
+		final int currWidth = settings.getWidth();
+		final int currAa = settings.getSamples();
+		
+		// Populate fullscreen and vsync checkboxes
+		screen.findNiftyControl("fs_checkbox", CheckBox.class).setChecked(isFullscreen);
+		screen.findNiftyControl("vs_checkbox", CheckBox.class).setChecked(isVSync);
+		
+		// Populate screen resolution drop down
+		// TODO: Don't clear/populate this every time
+		DropDown<String> srDropdown = screen.findNiftyControl("sr_dropdown", DropDown.class);
+		srDropdown.clear();
+		ArrayList<DisplayMode> modes = this.getDisplayModes();
+		for(DisplayMode mode : modes) {
+			srDropdown.addItem(mode.getWidth() + "x" + mode.getHeight());
+			if(mode.getWidth() == currWidth && mode.getHeight() == currHeight)
+				srDropdown.selectItemByIndex(srDropdown.itemCount() - 1);
+		}
+		
+		// Populate anti-aliasing drop down
+		// TODO: Don't clear/populate this every time
+		DropDown<Integer> aaDropdown = screen.findNiftyControl("aa_dropdown", DropDown.class);
+		aaDropdown.clear();
+		aaDropdown.addAllItems(Arrays.asList(1, 2, 4, 6, 8, 16));
+		aaDropdown.selectItem(currAa);		
+	}
+	
+	private ArrayList<DisplayMode> getDisplayModes() {
+		// Get all possible display modes
+		DisplayMode[] modes = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayModes();
+		ArrayList<DisplayMode> modesList = new ArrayList<DisplayMode>(Arrays.asList(modes));
+		
+		// Sort the display modes by width, then height
+		Collections.sort(modesList, new Comparator<DisplayMode>() {
+			@Override
+			public int compare(DisplayMode dm1, DisplayMode dm2) {
+				if(dm1.getWidth() != dm2.getWidth())
+					return dm1.getWidth() - dm2.getWidth();
+				return dm1.getHeight() - dm2.getHeight();
+			}
+		});
+		
+		// Remove duplicate display modes by resolution
+		for(int i = 0; i < modesList.size() - 1; ++i) {
+			DisplayMode dm1 = modesList.get(i);
+			DisplayMode dm2 = modesList.get(i + 1);
+			if(dm1.getWidth() == dm2.getWidth() && dm1.getHeight() == dm2.getHeight())
+				modesList.remove(i + 1);
+		}
+		
+		return modesList;
+	}
+	
+	public void applySettings() {
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		Screen screen = niftyState.getScreen("start");
+		
+		final boolean isFullscreen = screen.findNiftyControl("fs_checkbox", CheckBox.class).isChecked();
+		final boolean isVSync = screen.findNiftyControl("vs_checkbox", CheckBox.class).isChecked();
+		
+		final String resString = (String)screen.findNiftyControl("sr_dropdown", DropDown.class).getSelection();
+		final int sepIndex = resString.indexOf("x");
+		final int width = Integer.parseInt(resString.substring(0, sepIndex));
+		final int height = Integer.parseInt(resString.substring(sepIndex + 1));
+		
+		final int aa = (Integer)screen.findNiftyControl("aa_dropdown", DropDown.class).getSelection();
+		
+		AppSettings settings = sApp.getContext().getSettings();
+		settings.setFullscreen(isFullscreen);
+		settings.setVSync(isVSync);
+		settings.setResolution(width, height);
+		settings.setSamples(aa);
+		sApp.setSettings(settings);
+		sApp.restart();
+	}
+	
+	public void closeSettings() {
+		// Make the settings layer invisible
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		Screen screen = niftyState.getScreen("start");
+		Element sLayer = screen.findElementByName("layer_settings");
+		sLayer.setVisible(false);
 	}
 	
 	public void quitGame() {
