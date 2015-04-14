@@ -102,6 +102,8 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 			Quaternion addRot = new Quaternion(dragY * 4, -dragX * 4, 0.0f, 1.0f);
 			addRot.multLocal(posVector);
 			addRot.multLocal(upVector);
+			posVector.normalizeLocal();
+			upVector.normalizeLocal();
 
 			// Rotate cube
 			cubeNode.lookAt(posVector, upVector);
