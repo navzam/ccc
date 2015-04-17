@@ -22,6 +22,7 @@ public class NiftyAppState extends AbstractAppState {
 			e.printStackTrace();
 		}
 		niftyDisplay.getNifty().addXml(xmlFilename);
+		niftyDisplay.getNifty().enableAutoScaling(1024, 768);
 		sApp.getGuiViewPort().addProcessor(niftyDisplay);
 		
 		// Load initial state and attach corresponding state
