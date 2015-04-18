@@ -98,8 +98,8 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		// TODO: Don't clear/populate this every time
 		DropDown<String> srDropdown = screen.findNiftyControl("sr_dropdown", DropDown.class);
 		srDropdown.clear();
-		ArrayList<DisplayMode> modes = this.getDisplayModes();
-		for(DisplayMode mode : modes) {
+		displayModes = this.getDisplayModes();
+		for(DisplayMode mode : displayModes) {
 			srDropdown.addItem(mode.getWidth() + "x" + mode.getHeight());
 			if(mode.getWidth() == currWidth && mode.getHeight() == currHeight)
 				srDropdown.selectItemByIndex(srDropdown.itemCount() - 1);
@@ -153,11 +153,26 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		
 		final int aa = (Integer)screen.findNiftyControl("aa_dropdown", DropDown.class).getSelection();
 		
+		// Find corresponding display mode
+		DisplayMode chosenMode = null;
+		for(int i = 0; i < displayModes.size(); ++i) {
+			chosenMode = displayModes.get(i);
+			if(chosenMode.getWidth() == width && chosenMode.getHeight() == height)
+				break;
+		}
+		if(chosenMode == null) {
+			System.err.println("Failed to find corresponding display mode!");
+			return;
+		}
+				
+		final int freq = chosenMode.getRefreshRate();
+		
 		AppSettings settings = sApp.getContext().getSettings();
 		settings.setFullscreen(isFullscreen);
 		settings.setVSync(isVSync);
 		settings.setResolution(width, height);
 		settings.setSamples(aa);
+		settings.setFrequency(freq);
 		sApp.setSettings(settings);
 		sApp.restart();
 	}
@@ -176,5 +191,6 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	
 	private SimpleApplication sApp;
 	private Node cubeNode;
+	private ArrayList<DisplayMode> displayModes;
 
 }
