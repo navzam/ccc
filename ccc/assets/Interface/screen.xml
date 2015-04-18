@@ -12,6 +12,9 @@
 				<control name="button" label="Free play" id="FreePlayButton" align="center" valign="center">
 					<interact onClick="switchToFreePlay()" />
 				</control>
+				<control name="button" label="Timed play" id="TimedPlayButton" align="center" valign="center">
+					<interact onClick="switchToTimedPlay()" />
+				</control>
 				<control name="button" label="Settings" id="SettingsButton" align="center" valign="center">
 					<interact onClick="openSettings()" />
 				</control>
