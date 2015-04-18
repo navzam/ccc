@@ -9,7 +9,7 @@ public class Main extends SimpleApplication {
 		// Setup default settings
 		AppSettings settings = new AppSettings(true);
 		settings.setTitle("CCC");
-		settings.setResolution(800, 600);
+		settings.setResolution(1024, 768);
 		settings.setSamples(16);
 		settings.setVSync(true);
 		
