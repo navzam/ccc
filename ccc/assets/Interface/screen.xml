@@ -60,7 +60,7 @@
 		</layer>
 	</screen>
 	
-	<screen id="overlay" controller="CubeAppState">
+	<screen id="overlay" controller="OverlayAppState">
 		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
 			<panel id="panel_top" height="95%" width="100%" align="center" childLayout="vertical" />
 			<panel id="panel_bottom" height="5%" width="100%" align="center" childLayout="vertical">

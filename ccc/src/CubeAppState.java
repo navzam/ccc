@@ -22,11 +22,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-
-public class CubeAppState extends AbstractAppState implements ScreenController {
+public class CubeAppState extends AbstractAppState {
 	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
@@ -287,18 +283,6 @@ public class CubeAppState extends AbstractAppState implements ScreenController {
 	
 	public Node getCubeNode() {
 		return cubeNode;
-	}
-	
-	@Override
-	public void bind(Nifty nifty, Screen screen) {
-	}
-
-	@Override
-	public void onEndScreen() {
-	}
-
-	@Override
-	public void onStartScreen() {		
 	}
 	
 	private SimpleApplication sApp;

@@ -69,8 +69,9 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	
 	public void switchToFreePlay() {
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		AbstractAppState nextState = (AbstractAppState)niftyState.loadScreen("overlay");
-		sApp.getStateManager().attach(nextState);
+		AbstractAppState overlayState = (AbstractAppState)niftyState.loadScreen("overlay");
+		sApp.getStateManager().attach(overlayState);
+		sApp.getStateManager().attach(new CubeAppState());
 		sApp.getStateManager().detach(this);
 	}
 	
