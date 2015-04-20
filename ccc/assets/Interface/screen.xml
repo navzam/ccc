@@ -10,13 +10,13 @@
 			<panel id="panel_mid" height="50%" width="100%" />
 			<panel id="panel_bottom" height="20%" width="100%" align="center" childLayout="vertical">
 				<control name="button" label="Free play" id="FreePlayButton" align="center" valign="center">
-					<interact onClick="switchToFreePlay()" />
+					<interact onClick="switchToMode(free)" />
 				</control>
 				<control name="button" label="Timed play" id="TimedPlayButton" align="center" valign="center">
-					<interact onClick="switchToTimedPlay()" />
+					<interact onClick="switchToMode(timed)" />
 				</control>
 				<control name="button" label="Optimal mode" id="OptimalModeButton" align="center" valign="center">
-					<interact onClick="switchToOptimalMode()" />
+					<interact onClick="switchToMode(optimal)" />
 				</control>
 				<control name="button" label="Settings" id="SettingsButton" align="center" valign="center">
 					<interact onClick="openSettings()" />

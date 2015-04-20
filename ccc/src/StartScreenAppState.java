@@ -67,30 +67,17 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	public void onStartScreen() {
 	}
 	
-	public void switchToFreePlay() {
-		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
-		overlayState.setOverlayMode(OverlayAppState.OverlayMode.FREE_PLAY);
+	public void switchToMode(String modeStr) {
+		System.out.println(modeStr);
+		OverlayAppState.OverlayMode mode = OverlayAppState.OverlayMode.FREE_PLAY;
+		if(modeStr.equals("timed"))
+			mode = OverlayAppState.OverlayMode.TIMED_PLAY;
+		else if(modeStr.equals("optimal"))
+			mode = OverlayAppState.OverlayMode.OPTIMAL_MODE;
 		
-		sApp.getStateManager().attach(overlayState);
-		sApp.getStateManager().attach(new CubeAppState());
-		sApp.getStateManager().detach(this);
-	}
-	
-	public void switchToTimedPlay() {
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
 		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
-		overlayState.setOverlayMode(OverlayAppState.OverlayMode.TIMED_PLAY);
-		
-		sApp.getStateManager().attach(overlayState);
-		sApp.getStateManager().attach(new CubeAppState());
-		sApp.getStateManager().detach(this);
-	}
-	
-	public void switchToOptimalMode() {
-		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
-		overlayState.setOverlayMode(OverlayAppState.OverlayMode.OPTIMAL_MODE);
+		overlayState.setOverlayMode(mode);
 		
 		sApp.getStateManager().attach(overlayState);
 		sApp.getStateManager().attach(new CubeAppState());
