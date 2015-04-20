@@ -15,6 +15,9 @@
 				<control name="button" label="Timed play" id="TimedPlayButton" align="center" valign="center">
 					<interact onClick="switchToTimedPlay()" />
 				</control>
+				<control name="button" label="Optimal mode" id="OptimalModeButton" align="center" valign="center">
+					<interact onClick="switchToOptimalMode()" />
+				</control>
 				<control name="button" label="Settings" id="SettingsButton" align="center" valign="center">
 					<interact onClick="openSettings()" />
 				</control>
