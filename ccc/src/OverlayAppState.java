@@ -30,6 +30,8 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 			textTime.setVisible(true);
 			updateTextTime(0);
 		}
+		
+		cubeState = sApp.getStateManager().getState(CubeAppState.class);
 	}
 
 	@Override
@@ -45,6 +47,9 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	@Override
 	public void update(float tpf) {
 		if(currMode == OverlayMode.TIMED_PLAY && stopWatch.isRunning()) {
+			if(cubeState.isCubeSolved())
+				stopWatch.stop();
+			
 			this.updateTextTime(stopWatch.getElapsedMillis());
 		}
 	}
@@ -65,12 +70,6 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	}
 	
 	public void scrambleCube() {
-		CubeAppState cubeState = sApp.getStateManager().getState(CubeAppState.class);
-		if(cubeState == null) {
-			System.err.println("Scramble failed because cube state is not attached!");
-			return;
-		}
-		
 		cubeState.scrambleCube();
 		
 		// If we're in timed mode, restart the timer
@@ -95,6 +94,8 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	private SimpleApplication sApp;
 	private OverlayMode currMode = OverlayMode.FREE_PLAY;
 	private StopWatch stopWatch = new StopWatch();
+	
+	private CubeAppState cubeState;
 	private Element textTime;
 
 }

@@ -281,6 +281,10 @@ public class CubeAppState extends AbstractAppState {
 		}
 	}
 	
+	public boolean isCubeSolved() {
+		return cube.isSolved();
+	}
+	
 	public Node getCubeNode() {
 		return cubeNode;
 	}
