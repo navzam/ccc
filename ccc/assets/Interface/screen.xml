@@ -52,6 +52,49 @@
 								<control name="dropDown" id="aa_dropdown" />
 							</panel>
 						</control>
+						<control id="tab_game" name="tab" caption="Game" childLayout="vertical">
+							<panel id="panel_scr" height="33%" width="100%" align="center" childLayout="horizontal">
+								<text text="Scramble length: " style="base-font" color="#eeef" />
+								<panel width="*" />
+								<control name="textfield" maxLength="4" width="40%" />
+							</panel>
+							<control id="FRTypeGroup" name="radioButtonGroup" />
+							<panel id="panel_frt" height="33%" width="100%" align="center" childLayout="horizontal">
+								<text text="Face rotation: " style="base-font" color="#eeef"/>
+								<panel width="*" />
+								<panel childLayout="vertical" backgroundColor="#2225" width="40%">
+									<effect>
+										<onActive name="border" color="#0008" />
+									</effect>
+									<panel childLayout="horizontal">
+										<control name="radioButton" id="opt_cad" group="FRTypeGroup" />
+										<text text="Click and drag" style="base-font" color="#eeef" />
+									</panel>
+									<panel childLayout="horizontal">
+										<control name="radioButton" id="opt_pad" group="FRTypeGroup" />
+										<text text="Point and direct" style="base-font" color="#eeef" />
+									</panel>
+								</panel>
+							</panel>
+							<control id="CRTypeGroup" name="radioButtonGroup" />
+							<panel id="panel_crt" height="33%" width="100%" align="center" childLayout="horizontal">
+								<text text="Cube rotation: " style="base-font" color="#eeef"/>
+								<panel width="*" />
+								<panel childLayout="vertical" backgroundColor="#2225" width="40%">
+									<effect>
+										<onActive name="border" color="#0008" />
+									</effect>
+									<panel childLayout="horizontal">
+										<control name="radioButton" id="opt_fr" group="CRTypeGroup" />
+										<text text="Free" style="base-font" color="#eeef" />
+									</panel>
+									<panel childLayout="horizontal">
+										<control name="radioButton" id="opt_tt" group="CRTypeGroup" />
+										<text text="Turntable" style="base-font" color="#eeef" />
+									</panel>
+								</panel>
+							</panel>
+						</control>
 					</control>
 					<panel id="panel_bot" height="15%" width="100%" align="center" childLayout="horizontal">
 						<panel height="100%" width="*" />
