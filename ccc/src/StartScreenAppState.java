@@ -69,7 +69,19 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	
 	public void switchToFreePlay() {
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		AbstractAppState overlayState = (AbstractAppState)niftyState.loadScreen("overlay");
+		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
+		overlayState.setOverlayMode(OverlayAppState.OverlayMode.FREE_PLAY);
+		
+		sApp.getStateManager().attach(overlayState);
+		sApp.getStateManager().attach(new CubeAppState());
+		sApp.getStateManager().detach(this);
+	}
+	
+	public void switchToTimedPlay() {
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
+		overlayState.setOverlayMode(OverlayAppState.OverlayMode.TIMED_PLAY);
+		
 		sApp.getStateManager().attach(overlayState);
 		sApp.getStateManager().attach(new CubeAppState());
 		sApp.getStateManager().detach(this);

@@ -62,7 +62,9 @@
 	
 	<screen id="overlay" controller="OverlayAppState">
 		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
-			<panel id="panel_top" height="95%" width="100%" align="center" childLayout="vertical" />
+			<panel id="panel_top" height="95%" width="100%" align="center" childLayout="vertical">
+				<text id="text_time" text="Time: " font="Interface/Fonts/Default.fnt" width="100%" />
+			</panel>
 			<panel id="panel_bottom" height="5%" width="100%" align="center" childLayout="vertical">
 				<control name="button" label="Scramble" id="ScrambleButton" align="right" valign="top">
 					<interact onClick="scrambleCube()" />
