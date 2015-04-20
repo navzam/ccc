@@ -6,7 +6,7 @@ import com.jme3.scene.shape.Quad;
 public class Cubie {
 	
 	public static enum Side {
-		FRONT(0, 'F'), BACK(1, 'B'), LEFT(2, 'L'), RIGHT(3, 'R'), TOP(4, 'T'), BOTTOM(5, 'D');
+		FRONT(0, 'F'), BACK(1, 'B'), LEFT(2, 'L'), RIGHT(3, 'R'), TOP(4, 'U'), BOTTOM(5, 'D');
 		
 		public final int value;
 		public final char name;
