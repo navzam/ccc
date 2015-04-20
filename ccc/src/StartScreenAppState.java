@@ -87,6 +87,16 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		sApp.getStateManager().detach(this);
 	}
 	
+	public void switchToOptimalMode() {
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
+		overlayState.setOverlayMode(OverlayAppState.OverlayMode.OPTIMAL_MODE);
+		
+		sApp.getStateManager().attach(overlayState);
+		sApp.getStateManager().attach(new CubeAppState());
+		sApp.getStateManager().detach(this);
+	}
+	
 	public void openSettings() {		
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
 		Screen screen = niftyState.getScreen("start");

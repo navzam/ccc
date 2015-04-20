@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import org.kociemba.twophase.Search;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -279,6 +281,10 @@ public class CubeAppState extends AbstractAppState {
 			for(int turn = 0; turn < numTurns; ++turn)
 				cube.rotateFace(sides[side], false);
 		}
+	}
+	
+	public String solveCube() {
+		return Search.solution(cube.toDefinitionString(), 21, 5, false);
 	}
 	
 	public boolean isCubeSolved() {

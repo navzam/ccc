@@ -12,7 +12,7 @@ import de.lessvoid.nifty.screen.ScreenController;
 public class OverlayAppState extends AbstractAppState implements ScreenController {
 	
 	public static enum OverlayMode {
-		FREE_PLAY, TIMED_PLAY
+		FREE_PLAY, TIMED_PLAY, OPTIMAL_MODE
 	}
 	
 	@Override
@@ -24,11 +24,26 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		NiftyAppState niftyState = stateManager.getState(NiftyAppState.class);
 		Screen screen = niftyState.getScreen("overlay");
 		textTime = screen.findElementByName("text_time");
-		if(this.currMode == OverlayMode.FREE_PLAY)
+		textSolution = screen.findElementByName("text_solution");
+		buttonSolve = screen.findElementByName("SolveButton");
+		if(this.currMode == OverlayMode.FREE_PLAY) {
 			textTime.setVisible(false);
-		else {
+			textSolution.setVisible(false);
+			buttonSolve.setVisible(false);
+		}
+		else if(this.currMode == OverlayMode.TIMED_PLAY) {
 			textTime.setVisible(true);
+			textSolution.setVisible(false);
+			buttonSolve.setVisible(false);
+			
 			updateTextTime(0);
+		}
+		else if(this.currMode == OverlayMode.OPTIMAL_MODE) {
+			textTime.setVisible(false);
+			textSolution.setVisible(true);
+			buttonSolve.setVisible(true);
+			
+			updateTextSolution("");
 		}
 		
 		cubeState = sApp.getStateManager().getState(CubeAppState.class);
@@ -75,7 +90,13 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		// If we're in timed mode, restart the timer
 		if(currMode == OverlayMode.TIMED_PLAY)
 			stopWatch.start();
-		
+		else if(currMode == OverlayMode.OPTIMAL_MODE)
+			updateTextSolution("");
+	}
+	
+	public void solveCube() {
+		updateTextSolution("solving...");
+		updateTextSolution(cubeState.solveCube());
 	}
 	
 	public void setOverlayMode(OverlayMode mode) {
@@ -91,11 +112,17 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		textTime.getRenderer(TextRenderer.class).setText("Time: " + time);
 	}
 	
+	private void updateTextSolution(String sol) {
+		textSolution.getRenderer(TextRenderer.class).setText("Solution: " + sol);
+	}
+	
 	private SimpleApplication sApp;
 	private OverlayMode currMode = OverlayMode.FREE_PLAY;
 	private StopWatch stopWatch = new StopWatch();
 	
 	private CubeAppState cubeState;
 	private Element textTime;
+	private Element textSolution;
+	private Element buttonSolve;
 
 }
