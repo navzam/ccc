@@ -214,6 +214,42 @@ public class Cube {
 		return cubies[x][y][z];
 	}
 	
+	public String toDefinitionString() {
+		StringBuilder sb = new StringBuilder();
+				
+		// Top face
+		for(int z = 0; z < 3; ++z)
+			for(int x = 0; x < 3; ++x)
+				sb.append(cubies[x][2][z].getColor(Cubie.Side.TOP) + " ");
+		
+		// Right face
+		for(int y = 2; y >= 0; --y)
+			for(int z = 2; z >= 0; --z)
+				sb.append(cubies[2][y][z].getColor(Cubie.Side.RIGHT) + " ");
+			
+		// Front face
+		for(int y = 2; y >= 0; --y)
+			for(int x = 0; x < 3; ++x)
+				sb.append(cubies[x][y][2].getColor(Cubie.Side.FRONT) + " ");
+		
+		// Bottom face
+		for(int z = 2; z >= 0; --z)
+			for(int x = 0; x < 3; ++x)
+				sb.append(cubies[x][0][z].getColor(Cubie.Side.BOTTOM) + " ");
+		
+		// Left face
+		for(int y = 2; y >= 0; --y)
+			for(int z = 0; z < 3; ++z)
+				sb.append(cubies[0][y][z].getColor(Cubie.Side.LEFT) + " ");
+		
+		// Back face
+		for(int y = 2; y >= 0; --y)			
+			for(int x = 2; x >= 0; --x)
+				sb.append(cubies[x][y][0].getColor(Cubie.Side.BACK) + " ");			
+		
+		return sb.toString();
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		final String sep = System.getProperty("line.separator");
