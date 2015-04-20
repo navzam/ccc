@@ -188,6 +188,22 @@ public class Cube {
 			}
 	}
 	
+	public boolean isSolved() {
+		for(int c1 = 0; c1 < 3; ++c1) {
+			for(int c2 = 0; c2 < 3; ++c2) {
+				if(cubies[0][c1][c2].getColor(Cubie.Side.LEFT) != cubies[0][1][1].getColor(Cubie.Side.LEFT)
+						|| cubies[2][c1][c2].getColor(Cubie.Side.RIGHT) != cubies[2][1][1].getColor(Cubie.Side.RIGHT)
+						|| cubies[c1][0][c2].getColor(Cubie.Side.BOTTOM) != cubies[1][0][1].getColor(Cubie.Side.BOTTOM)
+						|| cubies[c1][2][c2].getColor(Cubie.Side.TOP) != cubies[1][2][1].getColor(Cubie.Side.TOP)
+						|| cubies[c1][c2][0].getColor(Cubie.Side.BACK) != cubies[1][1][0].getColor(Cubie.Side.BACK)
+						|| cubies[c1][c2][2].getColor(Cubie.Side.FRONT) != cubies[1][1][2].getColor(Cubie.Side.FRONT))
+					return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public Cubie getCubie(int x, int y, int z) {
 		if(x < 0 || x > 2 || y < 0 || y > 2 || z < 0 || z > 2)
 		{
