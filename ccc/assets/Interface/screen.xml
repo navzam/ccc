@@ -27,7 +27,7 @@
 			</panel>
 		</layer>
 		<layer id="layer_settings" backgroundColor="#0008" childLayout="absolute" visible="false" >
-			<control name="window" id="window_settings" title="Settings" closeable="false" width="35%" height="35%" x="10%" y="20%">
+			<control name="window" id="window_settings" title="Settings" closeable="false" width="35%" height="38%" x="10%" y="20%">
 				<panel id="panel_window" height="100%" width="100%" align="center" childLayout="vertical">
 					<control id="tabs_settings" name="tabGroup" height="85%" width="100%">
 						<control id="tab_display" name="tab" caption="Display" childLayout="vertical">
