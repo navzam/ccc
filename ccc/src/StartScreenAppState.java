@@ -16,6 +16,7 @@ import com.jme3.system.AppSettings;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.CheckBox;
 import de.lessvoid.nifty.controls.DropDown;
+import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -92,13 +93,16 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		Element sLayer = screen.findElementByName("layer_settings");
 		sLayer.setVisible(true);
 		
-		// Retreive current settings
+		// Retrieve current display settings
 		AppSettings settings = sApp.getContext().getSettings();
 		final boolean isFullscreen = settings.isFullscreen();
 		final boolean isVSync = settings.isVSync();
 		final int currHeight = settings.getHeight();
 		final int currWidth = settings.getWidth();
 		final int currAa = settings.getSamples();
+		
+		// Retrieve current game settings
+		final int scramLen = Math.max(1, settings.getInteger("scramble_length"));
 		
 		// Populate fullscreen and vsync checkboxes
 		screen.findNiftyControl("fs_checkbox", CheckBox.class).setChecked(isFullscreen);
@@ -120,7 +124,10 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		DropDown<Integer> aaDropdown = screen.findNiftyControl("aa_dropdown", DropDown.class);
 		aaDropdown.clear();
 		aaDropdown.addAllItems(Arrays.asList(1, 2, 4, 6, 8, 16));
-		aaDropdown.selectItem(currAa);		
+		aaDropdown.selectItem(currAa);
+		
+		// Populate game settings elements
+		screen.findNiftyControl("scr_field", TextField.class).setText(Integer.toString(scramLen));
 	}
 	
 	private ArrayList<DisplayMode> getDisplayModes() {
@@ -153,6 +160,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
 		Screen screen = niftyState.getScreen("start");
 		
+		// Retrieve chosen display settings
 		final boolean isFullscreen = screen.findNiftyControl("fs_checkbox", CheckBox.class).isChecked();
 		final boolean isVSync = screen.findNiftyControl("vs_checkbox", CheckBox.class).isChecked();
 		
@@ -177,12 +185,26 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 				
 		final int freq = chosenMode.getRefreshRate();
 		
+		// Retrieve chosen game settings
+		int scramLen = 100;
+		try {
+			scramLen = Integer.parseInt(screen.findNiftyControl("scr_field", TextField.class).getRealText());
+		} catch (NumberFormatException e) {
+			// TODO: give user better feedback
+			System.err.println("Scramble length is not a valid integer!");
+		}
+		
 		AppSettings settings = sApp.getContext().getSettings();
+		
+		// Apply display settings
 		settings.setFullscreen(isFullscreen);
 		settings.setVSync(isVSync);
 		settings.setResolution(width, height);
 		settings.setSamples(aa);
 		settings.setFrequency(freq);
+		
+		// Apply game settings
+		settings.putInteger("scramble_length", scramLen);
 		sApp.setSettings(settings);
 		sApp.restart();
 	}

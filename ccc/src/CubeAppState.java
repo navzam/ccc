@@ -271,7 +271,7 @@ public class CubeAppState extends AbstractAppState {
 	
 	public void scrambleCube() {
 		final Random random = new Random();
-		final int numMoves = 100;
+		final int numMoves = this.sApp.getContext().getSettings().getInteger("scramble_length");
 		final Cubie.Side[] sides = Cubie.Side.values();
 		
 		for(int i = 0; i < numMoves; ++i) {
