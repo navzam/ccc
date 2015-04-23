@@ -25,7 +25,7 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		Screen screen = niftyState.getScreen("overlay");
 		textTime = screen.findElementByName("text_time");
 		textSolution = screen.findElementByName("text_solution");
-		buttonSolve = screen.findElementByName("SolveButton");
+		buttonSolve = screen.findElementByName("button_solve");
 		if(this.currMode == OverlayMode.FREE_PLAY) {
 			textTime.setVisible(false);
 			textSolution.setVisible(false);
