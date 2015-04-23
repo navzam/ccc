@@ -16,7 +16,7 @@ public class Main extends SimpleApplication {
 		// Create application and start it
 		Main app = new Main();
 		app.setSettings(settings);
-		app.setShowSettings(true);
+		app.setShowSettings(false);
 		app.start();
 	}
 
