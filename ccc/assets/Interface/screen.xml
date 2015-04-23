@@ -3,12 +3,12 @@
 	<useStyles filename="nifty-default-styles.xml" />
  	<useControls filename="nifty-default-controls.xml" />
 	<screen id="start" controller="StartScreenAppState">
-		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
-			<panel id="panel_top" height="30%" width="100%" align="center" childLayout="vertical">
+		<layer backgroundColor="#0000" childLayout="vertical">
+			<panel height="30%" width="100%" align="center" childLayout="vertical">
 				<text text="Cool Computer Cube" font="Interface/Fonts/Default.fnt" width="100%" height="70%" />
 			</panel>
-			<panel id="panel_mid" height="50%" width="100%" />
-			<panel id="panel_bottom" height="20%" width="100%" align="center" childLayout="vertical">
+			<panel height="50%" width="100%" />
+			<panel height="20%" width="100%" align="center" childLayout="vertical">
 				<control name="button" label="Free play" id="FreePlayButton" align="center" valign="center">
 					<interact onClick="switchToMode(free)" />
 				</control>
@@ -27,39 +27,39 @@
 			</panel>
 		</layer>
 		<layer id="layer_settings" backgroundColor="#0008" childLayout="absolute" visible="false" >
-			<control name="window" id="window_settings" title="Settings" closeable="false" width="35%" height="38%" x="10%" y="20%">
-				<panel id="panel_window" height="100%" width="100%" align="center" childLayout="vertical">
-					<control id="tabs_settings" name="tabGroup" height="85%" width="100%">
-						<control id="tab_display" name="tab" caption="Display" childLayout="vertical">
-							<panel id="panel_fs" height="25%" width="100%" align="center" childLayout="horizontal">
+			<control name="window" title="Settings" closeable="false" width="35%" height="38%" x="10%" y="20%">
+				<panel height="100%" width="100%" align="center" childLayout="vertical">
+					<control name="tabGroup" height="85%" width="100%">
+						<control name="tab" caption="Display" childLayout="vertical">
+							<panel height="25%" width="100%" align="center" childLayout="horizontal">
 								<text text="Fullscreen: " style="base-font" color="#eeef" />
 								<panel width="*" />
 								<control name="checkbox" id="fs_checkbox" />
 							</panel>
-							<panel id="panel_vs" height="25%" width="100%" align="center" childLayout="horizontal">
+							<panel height="25%" width="100%" align="center" childLayout="horizontal">
 								<text text="Vsync: " style="base-font" color="#eeef" />
 								<panel width="*" />
 								<control name="checkbox" id="vs_checkbox" />
 							</panel>
-							<panel id="panel_sr" height="25%" width="100%" align="center" childLayout="horizontal">
+							<panel height="25%" width="100%" align="center" childLayout="horizontal">
 								<text text="Screen resolution: " style="base-font" color="#eeef" />
 								<panel width="*" />
 								<control name="dropDown" id="sr_dropdown" />
 							</panel>
-							<panel id="panel_aa" height="25%" width="100%" align="center" childLayout="horizontal">
+							<panel height="25%" width="100%" align="center" childLayout="horizontal">
 								<text text="Anti-aliasing (samples): " style="base-font" color="#eeef" />
 								<panel width="*" />
 								<control name="dropDown" id="aa_dropdown" />
 							</panel>
 						</control>
-						<control id="tab_game" name="tab" caption="Game" childLayout="vertical">
-							<panel id="panel_scr" height="33%" width="100%" align="center" childLayout="horizontal">
+						<control name="tab" caption="Game" childLayout="vertical">
+							<panel height="33%" width="100%" align="center" childLayout="horizontal">
 								<text text="Scramble length: " style="base-font" color="#eeef" />
 								<panel width="*" />
 								<control name="textfield" maxLength="4" width="40%" />
 							</panel>
 							<control id="FRTypeGroup" name="radioButtonGroup" />
-							<panel id="panel_frt" height="33%" width="100%" align="center" childLayout="horizontal">
+							<panel height="33%" width="100%" align="center" childLayout="horizontal">
 								<text text="Face rotation: " style="base-font" color="#eeef"/>
 								<panel width="*" />
 								<panel childLayout="vertical" backgroundColor="#2225" width="40%">
@@ -77,7 +77,7 @@
 								</panel>
 							</panel>
 							<control id="CRTypeGroup" name="radioButtonGroup" />
-							<panel id="panel_crt" height="33%" width="100%" align="center" childLayout="horizontal">
+							<panel height="33%" width="100%" align="center" childLayout="horizontal">
 								<text text="Cube rotation: " style="base-font" color="#eeef"/>
 								<panel width="*" />
 								<panel childLayout="vertical" backgroundColor="#2225" width="40%">
@@ -96,7 +96,7 @@
 							</panel>
 						</control>
 					</control>
-					<panel id="panel_bot" height="15%" width="100%" align="center" childLayout="horizontal">
+					<panel height="15%" width="100%" align="center" childLayout="horizontal">
 						<panel height="100%" width="*" />
 						<control name="button" label="Apply" id="apply_button" align="right" valign="center">
 							<interact onClick="applySettings()" />
@@ -111,12 +111,12 @@
 	</screen>
 	
 	<screen id="overlay" controller="OverlayAppState">
-		<layer id="foreground" backgroundColor="#0000" childLayout="vertical">
-			<panel id="panel_top" height="95%" width="100%" align="center" childLayout="vertical">
+		<layer backgroundColor="#0000" childLayout="vertical">
+			<panel height="95%" width="100%" align="center" childLayout="vertical">
 				<text id="text_time" text="Time: " font="Interface/Fonts/Default.fnt" width="100%" enabled="false" />
 				<text id="text_solution" text="Solution: " font="Interface/Fonts/Default.fnt" width="100%" />
 			</panel>
-			<panel id="panel_bottom" height="5%" width="100%" align="center" childLayout="horizontal">
+			<panel height="5%" width="100%" align="center" childLayout="horizontal">
 				<panel height="100%" width="*" />
 				<control name="button" label="Solve" id="SolveButton" align="right" valign="top">
 					<interact onClick="solveCube()" />
