@@ -26,6 +26,10 @@ import com.jme3.scene.Spatial;
 
 public class CubeAppState extends AbstractAppState {
 	
+	public static enum CubeRotationType {
+		FREE, TURNTABLE
+	}
+	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
@@ -96,15 +100,32 @@ public class CubeAppState extends AbstractAppState {
 
 		// If the cube is currently rotating
 		if(isCubeRotating) {
-			// Apply rotation to direction vectors
-			Quaternion addRot = new Quaternion(dragY * 4, -dragX * 4, 0.0f, 1.0f);
-			addRot.multLocal(posVector);
-			addRot.multLocal(upVector);
-			posVector.normalizeLocal();
-			upVector.normalizeLocal();
-
-			// Rotate cube
-			cubeNode.lookAt(posVector, upVector);
+			if(rotType == CubeRotationType.FREE) {
+				// Apply rotation to direction vectors
+				Quaternion addRot = new Quaternion(dragY * 4, -dragX * 4, 0.0f, 1.0f);
+				addRot.multLocal(posVector);
+				addRot.multLocal(upVector);
+				posVector.normalizeLocal();
+				upVector.normalizeLocal();
+	
+				// Rotate cube
+				cubeNode.lookAt(posVector, upVector);
+			}
+			else if(rotType == CubeRotationType.TURNTABLE) {
+				// Rotate cube according to new target rotation
+				targetRotation.addLocal(dragX * 4, dragY * 4);
+				targetRotation.y = Math.min(Math.max(targetRotation.y, -FastMath.HALF_PI), FastMath.HALF_PI);
+				cubeNode.setLocalRotation(Quaternion.IDENTITY);
+				cubeNode.rotate(targetRotation.y, 0.0f, 0.0f);
+				cubeNode.rotate(0.0f, -targetRotation.x, 0.0f);
+				
+				// Apply rotation to direction vectors
+				Quaternion localRot = cubeNode.getLocalRotation();
+				localRot.multLocal(posVector.set(0.0f, 0.0f, 1.0f));
+				localRot.multLocal(upVector.set(0.0f, 1.0f, 0.0f));
+				posVector.normalizeLocal();
+				upVector.normalizeLocal();
+			}
 
 			// Reset movement variables
 			dragX = 0.0f;
@@ -312,6 +333,8 @@ public class CubeAppState extends AbstractAppState {
 
 	private Node rotationNode = new Node();
 
+	private CubeRotationType rotType = CubeRotationType.TURNTABLE;
+	private Vector2f targetRotation = new Vector2f(0.0f, 0.0f);
 	private Vector3f posVector = new Vector3f(0, 0, 1);
 	private Vector3f upVector = new Vector3f(0, 1, 0);
 
