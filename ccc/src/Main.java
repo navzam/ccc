@@ -12,7 +12,7 @@ public class Main extends SimpleApplication {
 		settings.setResolution(1024, 768);
 		settings.setSamples(16);
 		settings.setVSync(true);
-		settings.putInteger("scramble_length", 100);
+		settings.putInteger(CCCConstants.Settings.SCRAMBLE_LENGTH, 100);
 		
 		// Create application and start it
 		Main app = new Main();
@@ -30,7 +30,7 @@ public class Main extends SimpleApplication {
 		
 		// Attach the nifty state
 		NiftyAppState niftyState = new NiftyAppState();
-		niftyState.setInitialScreen("start");
+		niftyState.setInitialScreen(CCCConstants.Nifty.SCREEN_START);
 		this.stateManager.attach(niftyState);
 	}
 	

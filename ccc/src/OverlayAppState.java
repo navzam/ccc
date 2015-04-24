@@ -22,10 +22,10 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		sApp = (SimpleApplication)app;
 		
 		NiftyAppState niftyState = stateManager.getState(NiftyAppState.class);
-		Screen screen = niftyState.getScreen("overlay");
-		textTime = screen.findElementByName("text_time");
-		textSolution = screen.findElementByName("text_solution");
-		buttonSolve = screen.findElementByName("button_solve");
+		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_OVERLAY);
+		textTime = screen.findElementByName(CCCConstants.Nifty.TEXT_TIME);
+		textSolution = screen.findElementByName(CCCConstants.Nifty.TEXT_SOLUTION);
+		buttonSolve = screen.findElementByName(CCCConstants.Nifty.BUTTON_SOLVE);
 		if(this.currMode == OverlayMode.FREE_PLAY) {
 			textTime.setVisible(false);
 			textSolution.setVisible(false);

@@ -77,7 +77,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 			mode = OverlayAppState.OverlayMode.OPTIMAL_MODE;
 		
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen("overlay");
+		OverlayAppState overlayState = (OverlayAppState)niftyState.loadScreen(CCCConstants.Nifty.SCREEN_OVERLAY);
 		overlayState.setOverlayMode(mode);
 		
 		sApp.getStateManager().attach(overlayState);
@@ -87,10 +87,10 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	
 	public void openSettings() {		
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		Screen screen = niftyState.getScreen("start");
+		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_START);
 		
 		// Make the settings layer visible
-		Element sLayer = screen.findElementByName("layer_settings");
+		Element sLayer = screen.findElementByName(CCCConstants.Nifty.LAYER_SETTINGS);
 		sLayer.setVisible(true);
 		
 		// Retrieve current display settings
@@ -102,15 +102,15 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		final int currAa = settings.getSamples();
 		
 		// Retrieve current game settings
-		final int scramLen = Math.max(1, settings.getInteger("scramble_length"));
+		final int scramLen = settings.getInteger(CCCConstants.Settings.SCRAMBLE_LENGTH);
 		
 		// Populate fullscreen and vsync checkboxes
-		screen.findNiftyControl("fs_checkbox", CheckBox.class).setChecked(isFullscreen);
-		screen.findNiftyControl("vs_checkbox", CheckBox.class).setChecked(isVSync);
+		screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_FULLSCREEN, CheckBox.class).setChecked(isFullscreen);
+		screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_VSYNC, CheckBox.class).setChecked(isVSync);
 		
 		// Populate screen resolution drop down
 		// TODO: Don't clear/populate this every time
-		DropDown<String> srDropdown = screen.findNiftyControl("sr_dropdown", DropDown.class);
+		DropDown<String> srDropdown = screen.findNiftyControl(CCCConstants.Nifty.DROPDOWN_RES, DropDown.class);
 		srDropdown.clear();
 		displayModes = this.getDisplayModes();
 		for(DisplayMode mode : displayModes) {
@@ -121,13 +121,13 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		
 		// Populate anti-aliasing drop down
 		// TODO: Don't clear/populate this every time
-		DropDown<Integer> aaDropdown = screen.findNiftyControl("aa_dropdown", DropDown.class);
+		DropDown<Integer> aaDropdown = screen.findNiftyControl(CCCConstants.Nifty.DROPDOWN_ANTIALIAS, DropDown.class);
 		aaDropdown.clear();
 		aaDropdown.addAllItems(Arrays.asList(1, 2, 4, 6, 8, 16));
 		aaDropdown.selectItem(currAa);
 		
 		// Populate game settings elements
-		screen.findNiftyControl("scr_field", TextField.class).setText(Integer.toString(scramLen));
+		screen.findNiftyControl(CCCConstants.Nifty.FIELD_SCRAMBLE, TextField.class).setText(Integer.toString(scramLen));
 	}
 	
 	private ArrayList<DisplayMode> getDisplayModes() {
@@ -158,18 +158,18 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	
 	public void applySettings() {
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		Screen screen = niftyState.getScreen("start");
+		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_START);
 		
 		// Retrieve chosen display settings
-		final boolean isFullscreen = screen.findNiftyControl("fs_checkbox", CheckBox.class).isChecked();
-		final boolean isVSync = screen.findNiftyControl("vs_checkbox", CheckBox.class).isChecked();
+		final boolean isFullscreen = screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_FULLSCREEN, CheckBox.class).isChecked();
+		final boolean isVSync = screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_VSYNC, CheckBox.class).isChecked();
 		
-		final String resString = (String)screen.findNiftyControl("sr_dropdown", DropDown.class).getSelection();
+		final String resString = (String)screen.findNiftyControl(CCCConstants.Nifty.DROPDOWN_RES, DropDown.class).getSelection();
 		final int sepIndex = resString.indexOf("x");
 		final int width = Integer.parseInt(resString.substring(0, sepIndex));
 		final int height = Integer.parseInt(resString.substring(sepIndex + 1));
 		
-		final int aa = (Integer)screen.findNiftyControl("aa_dropdown", DropDown.class).getSelection();
+		final int aa = (Integer)screen.findNiftyControl(CCCConstants.Nifty.DROPDOWN_ANTIALIAS, DropDown.class).getSelection();
 		
 		// Find corresponding display mode
 		DisplayMode chosenMode = null;
@@ -188,7 +188,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		// Retrieve chosen game settings
 		int scramLen = 100;
 		try {
-			scramLen = Integer.parseInt(screen.findNiftyControl("scr_field", TextField.class).getRealText());
+			scramLen = Integer.parseInt(screen.findNiftyControl(CCCConstants.Nifty.FIELD_SCRAMBLE, TextField.class).getRealText());
 		} catch (NumberFormatException e) {
 			// TODO: give user better feedback
 			System.err.println("Scramble length is not a valid integer!");
@@ -204,7 +204,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		settings.setFrequency(freq);
 		
 		// Apply game settings
-		settings.putInteger("scramble_length", scramLen);
+		settings.putInteger(CCCConstants.Settings.SCRAMBLE_LENGTH, scramLen);
 		sApp.setSettings(settings);
 		sApp.restart();
 	}
@@ -212,8 +212,8 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 	public void closeSettings() {
 		// Make the settings layer invisible
 		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
-		Screen screen = niftyState.getScreen("start");
-		Element sLayer = screen.findElementByName("layer_settings");
+		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_START);
+		Element sLayer = screen.findElementByName(CCCConstants.Nifty.LAYER_SETTINGS);
 		sLayer.setVisible(false);
 	}
 	
