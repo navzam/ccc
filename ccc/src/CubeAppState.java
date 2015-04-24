@@ -26,10 +26,6 @@ import com.jme3.scene.Spatial;
 
 public class CubeAppState extends AbstractAppState {
 	
-	public static enum CubeRotationType {
-		FREE, TURNTABLE
-	}
-	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
@@ -49,6 +45,9 @@ public class CubeAppState extends AbstractAppState {
 					this.cubeNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
 		
 		sApp.getRootNode().attachChild(this.cubeNode);
+		
+		// Set cube rotator
+		cubeRotator = new FreeRotator(cubeNode);
 	}
 
 	private void initInput() {
@@ -100,34 +99,10 @@ public class CubeAppState extends AbstractAppState {
 
 		// If the cube is currently rotating
 		if(isCubeRotating) {
-			if(rotType == CubeRotationType.FREE) {
-				// Apply rotation to direction vectors
-				Quaternion addRot = new Quaternion(dragY * 4, -dragX * 4, 0.0f, 1.0f);
-				addRot.multLocal(posVector);
-				addRot.multLocal(upVector);
-				posVector.normalizeLocal();
-				upVector.normalizeLocal();
-	
-				// Rotate cube
-				cubeNode.lookAt(posVector, upVector);
-			}
-			else if(rotType == CubeRotationType.TURNTABLE) {
-				// Rotate cube according to new target rotation
-				targetRotation.addLocal(dragX * 4, dragY * 4);
-				targetRotation.y = Math.min(Math.max(targetRotation.y, -FastMath.HALF_PI), FastMath.HALF_PI);
-				cubeNode.setLocalRotation(Quaternion.IDENTITY);
-				cubeNode.rotate(targetRotation.y, 0.0f, 0.0f);
-				cubeNode.rotate(0.0f, -targetRotation.x, 0.0f);
-				
-				// Apply rotation to direction vectors
-				Quaternion localRot = cubeNode.getLocalRotation();
-				localRot.multLocal(posVector.set(0.0f, 0.0f, 1.0f));
-				localRot.multLocal(upVector.set(0.0f, 1.0f, 0.0f));
-				posVector.normalizeLocal();
-				upVector.normalizeLocal();
-			}
+			// Rotate the cube according to drags
+			cubeRotator.rotate(dragX, dragY, 0.0f);
 
-			// Reset movement variables
+			// Reset drag variables
 			dragX = 0.0f;
 			dragY = 0.0f;
 		}
@@ -143,6 +118,8 @@ public class CubeAppState extends AbstractAppState {
 					Vector3f cross = new Vector3f();
 					chosenNormVector.cross(dragX, dragY, 0.0f, cross);
 
+					final Vector3f upVector = cubeRotator.getUpVector();
+					final Vector3f posVector = cubeRotator.getPosVector();
 					final float[] crossAbs = {Math.abs(cross.dot(upVector.cross(posVector))), Math.abs(cross.dot(upVector)), Math.abs(cross.dot(posVector))};
 					chosenAxis = 0;
 					if(crossAbs[1] > crossAbs[0])
@@ -170,6 +147,9 @@ public class CubeAppState extends AbstractAppState {
 			else {
 				Vector3f cross = new Vector3f();
 				chosenNormVector.cross(dragX, dragY, 0.0f, cross);
+				
+				final Vector3f upVector = cubeRotator.getUpVector();
+				final Vector3f posVector = cubeRotator.getPosVector();
 
 				final float speedMultiplier = 6.0f;
 				if(chosenAxis == 0)
@@ -333,10 +313,7 @@ public class CubeAppState extends AbstractAppState {
 
 	private Node rotationNode = new Node();
 
-	private CubeRotationType rotType = CubeRotationType.TURNTABLE;
-	private Vector2f targetRotation = new Vector2f(0.0f, 0.0f);
-	private Vector3f posVector = new Vector3f(0, 0, 1);
-	private Vector3f upVector = new Vector3f(0, 1, 0);
+	private AbstractCubeRotator cubeRotator;
 
 	private float dragX = 0.0f;
 	private float dragY = 0.0f;
