@@ -307,6 +307,10 @@ public class CubeAppState extends AbstractAppState {
 		return Search.solution(cube.toDefinitionString(), 21, 5, false);
 	}
 	
+	public void rotateFace(FaceTurn faceTurn) {
+		cube.rotateFace(faceTurn);
+	}
+	
 	public boolean isCubeSolved() {
 		return cube.isSolved();
 	}

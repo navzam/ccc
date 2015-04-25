@@ -1,4 +1,6 @@
 package state;
+import java.util.ArrayList;
+
 import util.CCCConstants;
 import util.StopWatch;
 
@@ -7,6 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 
+import cube.FaceTurn;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
@@ -108,7 +111,32 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	
 	public void solveCube() {
 		updateTextSolution("solving...");
-		updateTextSolution(cubeState.solveCube());
+		
+		final String solStr = cubeState.solveCube();
+		updateTextSolution(solStr);
+		
+		faceTurns = FaceTurn.getFaceTurns(solStr);
+		turnNum = -1;
+	}
+	
+	public void nextTurn() {
+		if(turnNum >= faceTurns.size() - 1)
+			return;
+		
+		++turnNum;
+		
+		FaceTurn nextTurn = faceTurns.get(turnNum);
+		cubeState.rotateFace(nextTurn);
+	}
+	
+	public void prevTurn() {
+		if(turnNum < 0)
+			return;
+		
+		final FaceTurn prevTurn = faceTurns.get(turnNum);
+		cubeState.rotateFace(FaceTurn.reversed(prevTurn));
+		
+		--turnNum;
 	}
 	
 	public void setOverlayMode(OverlayMode mode) {
@@ -135,5 +163,8 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	private CubeAppState cubeState;
 	private Element textTime;
 	private Element textSolution;
+	
+	private ArrayList<FaceTurn> faceTurns;
+	private int turnNum;
 
 }
