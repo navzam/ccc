@@ -15,6 +15,7 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.tools.Color;
 
 public class OverlayAppState extends AbstractAppState implements ScreenController {
 	
@@ -105,11 +106,14 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		// If we're in timed mode, restart the timer
 		if(currMode == OverlayMode.TIMED_PLAY)
 			stopWatch.start();
-		else if(currMode == OverlayMode.OPTIMAL_MODE)
+		else if(currMode == OverlayMode.OPTIMAL_MODE) {
+			cubeState.enableFaceRotation(true);
 			updateTextSolution("");
+		}
 	}
 	
 	public void solveCube() {
+		cubeState.enableFaceRotation(false);
 		updateTextSolution("solving...");
 		
 		final String solStr = cubeState.solveCube();
@@ -125,7 +129,10 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		
 		++turnNum;
 		
-		FaceTurn nextTurn = faceTurns.get(turnNum);
+		final FaceTurn nextTurn = faceTurns.get(turnNum);
+		highlightIndex += nextTurn.toString().length() + 1;
+		updateTextSolutionHighlight();
+		
 		cubeState.rotateFace(nextTurn);
 	}
 	
@@ -134,6 +141,9 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 			return;
 		
 		final FaceTurn prevTurn = faceTurns.get(turnNum);
+		highlightIndex -= prevTurn.toString().length() + 1;
+		updateTextSolutionHighlight();
+		
 		cubeState.rotateFace(FaceTurn.reversed(prevTurn));
 		
 		--turnNum;
@@ -156,6 +166,14 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		textSolution.getRenderer(TextRenderer.class).setText("Solution: " + sol);
 	}
 	
+	private void updateTextSolutionHighlight() {
+		TextRenderer rend = textSolution.getRenderer(TextRenderer.class);
+		rend.setSelection(0, rend.getOriginalText().length() - 1);
+		rend.setTextSelectionColor(new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		rend.setSelection(9, highlightIndex);
+		rend.setTextSelectionColor(new Color(0.65f, 0.65f, 0.65f, 1.0f));
+	}
+	
 	private SimpleApplication sApp;
 	private OverlayMode currMode = OverlayMode.FREE_PLAY;
 	private StopWatch stopWatch = new StopWatch();
@@ -166,5 +184,6 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	
 	private ArrayList<FaceTurn> faceTurns;
 	private int turnNum;
+	private int highlightIndex = 9;
 
 }

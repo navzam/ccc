@@ -4,7 +4,6 @@ import java.util.Random;
 import org.kociemba.twophase.Search;
 
 import util.CCCConstants;
-import util.CCCConstants.Settings;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -76,6 +75,16 @@ public class CubeAppState extends AbstractAppState {
 
 		inputManager.addListener(clickListener, MAPPING_ROTATE);
 		inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
+		
+		frEnabled = true;
+	}
+	
+	public void enableFaceRotation(boolean enable) {
+		frEnabled = enable;
+	}
+	
+	public boolean isFaceRotationEnabled() {
+		return frEnabled;
 	}
 
 	@Override
@@ -197,7 +206,7 @@ public class CubeAppState extends AbstractAppState {
 					cubeNode.collideWith(ray, results);
 
 					// If a cubie was clicked
-					if(results.size() != 0) {
+					if(frEnabled && results.size() != 0) {
 						CollisionResult res = results.getClosestCollision();
 						chosenNormVector = res.getContactNormal();
 
@@ -340,6 +349,8 @@ public class CubeAppState extends AbstractAppState {
 
 	private float dragX = 0.0f;
 	private float dragY = 0.0f;
+	
+	private boolean frEnabled;
 
 	private final static Trigger TRIGGER_ROTATE = new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
 	private final static Trigger TRIGGER_ROTATE_LEFT = new MouseAxisTrigger(MouseInput.AXIS_X, false);
