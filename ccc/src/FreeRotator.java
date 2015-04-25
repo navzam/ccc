@@ -2,7 +2,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 
 
-public class FreeRotator extends AbstractCubeRotator {
+public class FreeRotator extends AbstractRotator {
 
 	public FreeRotator(Node cubeNode) {
 		super(cubeNode);		

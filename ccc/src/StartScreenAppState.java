@@ -103,7 +103,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		
 		// Retrieve current game settings
 		final int scramLen = settings.getInteger(CCCConstants.Settings.SCRAMBLE_LENGTH);
-		AbstractCubeRotator.CubeRotationType crType = (AbstractCubeRotator.CubeRotationType)settings.get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
+		AbstractRotator.CubeRotationType crType = (AbstractRotator.CubeRotationType)settings.get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
 		
 		// Populate fullscreen and vsync checkboxes
 		screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_FULLSCREEN, CheckBox.class).setChecked(isFullscreen);
@@ -129,7 +129,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		
 		// Populate game settings elements
 		screen.findNiftyControl(CCCConstants.Nifty.FIELD_SCRAMBLE, TextField.class).setText(Integer.toString(scramLen));
-		if(crType == AbstractCubeRotator.CubeRotationType.FREE)
+		if(crType == AbstractRotator.CubeRotationType.FREE)
 			screen.findNiftyControl(CCCConstants.Nifty.RADIO_FREE_ROTATION, RadioButton.class).select();
 		else
 			screen.findNiftyControl(CCCConstants.Nifty.RADIO_TT_ROTATION, RadioButton.class).select();
@@ -200,9 +200,9 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		}
 		
 		// Retrieve selected rotation type
-		AbstractCubeRotator.CubeRotationType crType = AbstractCubeRotator.CubeRotationType.FREE;
+		AbstractRotator.CubeRotationType crType = AbstractRotator.CubeRotationType.FREE;
 		if(screen.findNiftyControl(CCCConstants.Nifty.RADIO_TT_ROTATION, RadioButton.class).isActivated())
-			crType = AbstractCubeRotator.CubeRotationType.TURNTABLE;
+			crType = AbstractRotator.CubeRotationType.TURNTABLE;
 		
 		AppSettings settings = sApp.getContext().getSettings();
 		

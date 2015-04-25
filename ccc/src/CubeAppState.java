@@ -47,8 +47,8 @@ public class CubeAppState extends AbstractAppState {
 		sApp.getRootNode().attachChild(this.cubeNode);
 		
 		// Set cube rotator
-		AbstractCubeRotator.CubeRotationType crType = (AbstractCubeRotator.CubeRotationType) sApp.getContext().getSettings().get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
-		if(crType == AbstractCubeRotator.CubeRotationType.FREE)
+		AbstractRotator.CubeRotationType crType = (AbstractRotator.CubeRotationType) sApp.getContext().getSettings().get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
+		if(crType == AbstractRotator.CubeRotationType.FREE)
 			cubeRotator = new FreeRotator(cubeNode);
 		else
 			cubeRotator = new TurntableRotator(cubeNode);
@@ -317,7 +317,7 @@ public class CubeAppState extends AbstractAppState {
 
 	private Node rotationNode = new Node();
 
-	private AbstractCubeRotator cubeRotator;
+	private AbstractRotator cubeRotator;
 
 	private float dragX = 0.0f;
 	private float dragY = 0.0f;

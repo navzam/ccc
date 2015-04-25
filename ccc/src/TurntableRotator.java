@@ -4,7 +4,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Node;
 
 
-public class TurntableRotator extends AbstractCubeRotator {
+public class TurntableRotator extends AbstractRotator {
 
 	public TurntableRotator(Node cubeNode) {
 		super(cubeNode);

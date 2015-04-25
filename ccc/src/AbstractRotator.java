@@ -2,7 +2,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 
-public abstract class AbstractCubeRotator {
+public abstract class AbstractRotator {
 	
 	public static enum CubeRotationType {
 		FREE, TURNTABLE
@@ -16,7 +16,7 @@ public abstract class AbstractCubeRotator {
 		return upVector.clone();
 	}
 	
-	public AbstractCubeRotator(Node cubeNode) {
+	public AbstractRotator(Node cubeNode) {
 		this.cubeNode = cubeNode;
 	}
 	
