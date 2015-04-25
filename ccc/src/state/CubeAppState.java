@@ -1,6 +1,10 @@
+package state;
 import java.util.Random;
 
 import org.kociemba.twophase.Search;
+
+import util.CCCConstants;
+import util.CCCConstants.Settings;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -23,6 +27,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
+import cube.AbstractRotator;
+import cube.Cube;
+import cube.Cubie;
+import cube.FreeRotator;
+import cube.TurntableRotator;
 
 public class CubeAppState extends AbstractAppState {
 	

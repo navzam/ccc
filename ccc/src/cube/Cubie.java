@@ -1,3 +1,7 @@
+package cube;
+import util.AxisVector;
+import util.MaterialManager;
+
 import com.jme3.math.FastMath;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;

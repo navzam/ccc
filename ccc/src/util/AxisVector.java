@@ -1,3 +1,4 @@
+package util;
 public class AxisVector {
 	
 	public static enum Axis {

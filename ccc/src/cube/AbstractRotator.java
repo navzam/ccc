@@ -1,3 +1,4 @@
+package cube;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -20,7 +21,7 @@ public abstract class AbstractRotator {
 		this.cubeNode = cubeNode;
 	}
 	
-	abstract void rotate(float inputX, float inputY, float inputZ);
+	public abstract void rotate(float inputX, float inputY, float inputZ);
 	
 	protected Vector3f posVector = new Vector3f(0, 0, 1);
 	protected Vector3f upVector = new Vector3f(0, 1, 0);

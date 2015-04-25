@@ -1,9 +1,13 @@
+package state;
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+
+import util.CCCConstants;
+import util.CCCConstants.Settings;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -13,6 +17,8 @@ import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
+import cube.AbstractRotator;
+import cube.Cube;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.CheckBox;
 import de.lessvoid.nifty.controls.DropDown;

@@ -1,3 +1,6 @@
+package cube;
+import util.AxisVector;
+
 public class Cube {
 	
 	private Cubie cubies[][][];

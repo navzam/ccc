@@ -1,3 +1,4 @@
+package util;
 import com.jme3.math.ColorRGBA;
 
 public class Color {

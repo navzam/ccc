@@ -1,3 +1,4 @@
+package cube;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 

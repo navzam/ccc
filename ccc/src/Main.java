@@ -1,7 +1,15 @@
 
+import state.NiftyAppState;
+import util.CCCConstants;
+import util.Color;
+import util.MaterialManager;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.system.AppSettings;
+
+import cube.AbstractRotator;
+import cube.Cubie;
 
 public class Main extends SimpleApplication {
 	

@@ -1,3 +1,4 @@
+package util;
 
 public final class CCCConstants {
 	

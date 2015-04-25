@@ -1,4 +1,7 @@
+package util;
 import com.jme3.material.Material;
+
+import cube.Cubie;
 
 public final class MaterialManager {
 	
