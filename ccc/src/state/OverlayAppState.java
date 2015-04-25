@@ -29,16 +29,22 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_OVERLAY);
 		textTime = screen.findElementByName(CCCConstants.Nifty.TEXT_TIME);
 		textSolution = screen.findElementByName(CCCConstants.Nifty.TEXT_SOLUTION);
-		buttonSolve = screen.findElementByName(CCCConstants.Nifty.BUTTON_SOLVE);
+		Element buttonSolve = screen.findElementByName(CCCConstants.Nifty.BUTTON_SOLVE);
+		Element buttonNext = screen.findElementByName(CCCConstants.Nifty.BUTTON_NEXT);
+		Element buttonPrev = screen.findElementByName(CCCConstants.Nifty.BUTTON_PREV);
 		if(this.currMode == OverlayMode.FREE_PLAY) {
 			textTime.setVisible(false);
 			textSolution.setVisible(false);
 			buttonSolve.setVisible(false);
+			buttonNext.setVisible(false);
+			buttonPrev.setVisible(false);
 		}
 		else if(this.currMode == OverlayMode.TIMED_PLAY) {
 			textTime.setVisible(true);
 			textSolution.setVisible(false);
 			buttonSolve.setVisible(false);
+			buttonNext.setVisible(false);
+			buttonPrev.setVisible(false);
 			
 			updateTextTime(0);
 		}
@@ -46,6 +52,8 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 			textTime.setVisible(false);
 			textSolution.setVisible(true);
 			buttonSolve.setVisible(true);
+			buttonNext.setVisible(true);
+			buttonPrev.setVisible(true);
 			
 			updateTextSolution("");
 		}
@@ -127,6 +135,5 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	private CubeAppState cubeState;
 	private Element textTime;
 	private Element textSolution;
-	private Element buttonSolve;
 
 }

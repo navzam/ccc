@@ -118,6 +118,12 @@
 			</panel>
 			<panel height="5%" width="100%" align="center" childLayout="horizontal">
 				<panel height="100%" width="*" />
+				<control name="button" label="Next" id="button_next" align="right" valign="top">
+					<interact onClick="nextMove()" />
+				</control>
+				<control name="button" label="Previous" id="button_prev" align="right" valign="top">
+					<interact onClick="prevMove()" />
+				</control>
 				<control name="button" label="Solve" id="button_solve" align="right" valign="top">
 					<interact onClick="solveCube()" />
 				</control>
