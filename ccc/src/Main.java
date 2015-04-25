@@ -13,6 +13,7 @@ public class Main extends SimpleApplication {
 		settings.setSamples(16);
 		settings.setVSync(true);
 		settings.putInteger(CCCConstants.Settings.SCRAMBLE_LENGTH, 100);
+		settings.put(CCCConstants.Settings.CUBE_ROTATION_TYPE, AbstractCubeRotator.CubeRotationType.FREE);
 		
 		// Create application and start it
 		Main app = new Main();
