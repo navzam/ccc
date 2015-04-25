@@ -31,6 +31,8 @@ import com.jme3.scene.Spatial;
 import cube.AbstractRotator;
 import cube.Cube;
 import cube.Cubie;
+import cube.FaceTurn;
+import cube.FaceTurn.Direction;
 import cube.FreeRotator;
 import cube.TurntableRotator;
 
@@ -245,8 +247,10 @@ public class CubeAppState extends AbstractAppState {
 							else
 								rotSide = Cubie.Side.FRONT;
 						}
-						for(int i = 0; i < numRots; ++i)
-							cube.rotateFace(rotSide, cw);
+						if(numRots == 2)
+							cube.rotateFace(new FaceTurn(rotSide, Direction.DOUBLE));
+						else
+							cube.rotateFace(new FaceTurn(rotSide, cw));
 
 						// Reset all rotation state variables
 						isFaceChosen = false;
@@ -294,7 +298,7 @@ public class CubeAppState extends AbstractAppState {
 			final int numTurns = random.nextInt(3) + 1;
 			
 			for(int turn = 0; turn < numTurns; ++turn)
-				cube.rotateFace(sides[side], false);
+				cube.rotateFace(new FaceTurn(sides[side], false));
 		}
 	}
 	

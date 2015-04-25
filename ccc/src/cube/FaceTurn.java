@@ -43,11 +43,24 @@ public class FaceTurn {
 		this.direction = direction;
 	}
 	
+	public FaceTurn(Cubie.Side face, boolean cw) {
+		this.face = face;
+		this.direction = cw ? Direction.CLOCKWISE : Direction.COUNTERCLOCKWISE;
+	}
+	
 	public void reverse() {
 		if(direction == Direction.CLOCKWISE)
 			direction = Direction.COUNTERCLOCKWISE;
 		else if(direction == Direction.COUNTERCLOCKWISE);
 			direction = Direction.CLOCKWISE;
+	}
+	
+	public Cubie.Side getFace() {
+		return face;
+	}
+	
+	public Direction getDirection() {
+		return direction;
 	}
 	
 	public String toString() {

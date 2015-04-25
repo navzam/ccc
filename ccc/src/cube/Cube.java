@@ -1,4 +1,5 @@
 package cube;
+import cube.FaceTurn.Direction;
 import util.AxisVector;
 
 public class Cube {
@@ -35,15 +36,22 @@ public class Cube {
 		}
 	}
 	
-	public void rotateFace(Cubie.Side side, boolean cw) {
+	public void rotateFace(FaceTurn faceTurn) {
+		final Cubie.Side side = faceTurn.getFace();
+		final int numTurns = faceTurn.getDirection() == Direction.DOUBLE ? 2 : 1;
+		final boolean cw = faceTurn.getDirection() == Direction.CLOCKWISE ? true : false;
+		
 		if(side == Cubie.Side.LEFT || side == Cubie.Side.RIGHT) {
-			this.rotateFaceX(side, cw);
+			for(int turn = 0; turn < numTurns; ++turn)
+				this.rotateFaceX(side, cw);
 		}
 		else if(side == Cubie.Side.BOTTOM || side == Cubie.Side.TOP) {
-			this.rotateFaceY(side, cw);
+			for(int turn = 0; turn < numTurns; ++turn)
+				this.rotateFaceY(side, cw);
 		}
 		else if(side == Cubie.Side.BACK || side == Cubie.Side.FRONT) {
-			this.rotateFaceZ(side, cw);
+			for(int turn = 0; turn < numTurns; ++turn)
+				this.rotateFaceZ(side, cw);
 		}
 	}
 	
