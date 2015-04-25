@@ -31,6 +31,7 @@ import com.jme3.scene.Spatial;
 import cube.AbstractRotator;
 import cube.Cube;
 import cube.Cubie;
+import cube.Cubie.Side;
 import cube.FaceTurn;
 import cube.FaceTurn.Direction;
 import cube.FreeRotator;
@@ -291,14 +292,14 @@ public class CubeAppState extends AbstractAppState {
 	public void scrambleCube() {
 		final Random random = new Random();
 		final int numMoves = this.sApp.getContext().getSettings().getInteger(CCCConstants.Settings.SCRAMBLE_LENGTH);
-		final Cubie.Side[] sides = Cubie.Side.values();
+		final Side[] sides = Side.values();
+		final Direction[] dirs = Direction.values();
 		
 		for(int i = 0; i < numMoves; ++i) {
-			final int side = random.nextInt(6);
-			final int numTurns = random.nextInt(3) + 1;
+			final int side = random.nextInt(sides.length);
+			final int dir = random.nextInt(dirs.length);
 			
-			for(int turn = 0; turn < numTurns; ++turn)
-				cube.rotateFace(new FaceTurn(sides[side], false));
+			cube.rotateFace(new FaceTurn(sides[side], dirs[dir]));
 		}
 	}
 	
