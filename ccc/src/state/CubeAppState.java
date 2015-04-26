@@ -229,38 +229,40 @@ public class CubeAppState extends AbstractAppState {
 						float totalRot = q.toAngleAxis(totalAxis);
 
 						int numRots = ((int)((totalRot + FastMath.QUARTER_PI) / FastMath.HALF_PI)) % 4;
-						boolean cw = totalAxis.get(chosenAxis) < 0.0f;
-						if(chosenCubiePos[chosenAxis] == 0)
-							cw = !cw;
-						if(numRots == 3) {
-							numRots = 1;
-							cw = !cw;
-						}
-
-						// Logically rotate the face
-						Cubie.Side rotSide = null;
-						if(chosenAxis == 0) {
-							if(chosenCubiePos[0] == 0)
-								rotSide = Cubie.Side.LEFT;
+						if(numRots != 0) {
+							boolean cw = totalAxis.get(chosenAxis) < 0.0f;
+							if(chosenCubiePos[chosenAxis] == 0)
+								cw = !cw;
+							if(numRots == 3) {
+								numRots = 1;
+								cw = !cw;
+							}
+	
+							// Logically rotate the face
+							Cubie.Side rotSide = null;
+							if(chosenAxis == 0) {
+								if(chosenCubiePos[0] == 0)
+									rotSide = Cubie.Side.LEFT;
+								else
+									rotSide = Cubie.Side.RIGHT;
+							}
+							else if(chosenAxis == 1) {
+								if(chosenCubiePos[1] == 0)
+									rotSide = Cubie.Side.BOTTOM;
+								else
+									rotSide = Cubie.Side.TOP;
+							}
+							else if(chosenAxis == 2) {
+								if(chosenCubiePos[2] == 0)
+									rotSide = Cubie.Side.BACK;
+								else
+									rotSide = Cubie.Side.FRONT;
+							}
+							if(numRots == 2)
+								cube.rotateFace(new FaceTurn(rotSide, Direction.DOUBLE));
 							else
-								rotSide = Cubie.Side.RIGHT;
+								cube.rotateFace(new FaceTurn(rotSide, cw));
 						}
-						else if(chosenAxis == 1) {
-							if(chosenCubiePos[1] == 0)
-								rotSide = Cubie.Side.BOTTOM;
-							else
-								rotSide = Cubie.Side.TOP;
-						}
-						else if(chosenAxis == 2) {
-							if(chosenCubiePos[2] == 0)
-								rotSide = Cubie.Side.BACK;
-							else
-								rotSide = Cubie.Side.FRONT;
-						}
-						if(numRots == 2)
-							cube.rotateFace(new FaceTurn(rotSide, Direction.DOUBLE));
-						else
-							cube.rotateFace(new FaceTurn(rotSide, cw));
 
 						// Reset all rotation state variables
 						isFaceChosen = false;
