@@ -12,14 +12,8 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.InputManager;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.input.controls.Trigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
@@ -69,19 +63,28 @@ public class CubeAppState extends AbstractAppState {
 	}
 
 	private void initInput() {
-		inputManager.addMapping(MAPPING_ROTATE, TRIGGER_ROTATE);
-		inputManager.addMapping(MAPPING_ROTATE_LEFT, TRIGGER_ROTATE_LEFT);
-		inputManager.addMapping(MAPPING_ROTATE_RIGHT, TRIGGER_ROTATE_RIGHT);
-		inputManager.addMapping(MAPPING_ROTATE_UP, TRIGGER_ROTATE_UP);
-		inputManager.addMapping(MAPPING_ROTATE_DOWN, TRIGGER_ROTATE_DOWN);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_ROTATE, CCCConstants.Input.TRIGGER_ROTATE);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_ROTATE_LEFT, CCCConstants.Input.TRIGGER_ROTATE_LEFT);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_ROTATE_RIGHT, CCCConstants.Input.TRIGGER_ROTATE_RIGHT);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_ROTATE_UP, CCCConstants.Input.TRIGGER_ROTATE_UP);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_ROTATE_DOWN, CCCConstants.Input.TRIGGER_ROTATE_DOWN);
 		
-		inputManager.addMapping(MAPPING_DIRECT_LEFT, TRIGGER_DIRECT_LEFT);
-		inputManager.addMapping(MAPPING_DIRECT_RIGHT, TRIGGER_DIRECT_RIGHT);
-		inputManager.addMapping(MAPPING_DIRECT_UP, TRIGGER_DIRECT_UP);
-		inputManager.addMapping(MAPPING_DIRECT_DOWN, TRIGGER_DIRECT_DOWN);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_DIRECT_LEFT, CCCConstants.Input.TRIGGER_DIRECT_LEFT);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_DIRECT_RIGHT, CCCConstants.Input.TRIGGER_DIRECT_RIGHT);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_DIRECT_UP, CCCConstants.Input.TRIGGER_DIRECT_UP);
+		inputManager.addMapping(CCCConstants.Input.MAPPING_DIRECT_DOWN, CCCConstants.Input.TRIGGER_DIRECT_DOWN);
 
-		inputManager.addListener(clickListener, MAPPING_ROTATE, MAPPING_DIRECT_LEFT, MAPPING_DIRECT_RIGHT, MAPPING_DIRECT_UP, MAPPING_DIRECT_DOWN);
-		inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
+		inputManager.addListener(clickListener,
+				CCCConstants.Input.MAPPING_ROTATE,
+				CCCConstants.Input.MAPPING_DIRECT_LEFT,
+				CCCConstants.Input.MAPPING_DIRECT_RIGHT,
+				CCCConstants.Input.MAPPING_DIRECT_UP,
+				CCCConstants.Input.MAPPING_DIRECT_DOWN);
+		inputManager.addListener(moveListener,
+				CCCConstants.Input.MAPPING_ROTATE_LEFT,
+				CCCConstants.Input.MAPPING_ROTATE_RIGHT,
+				CCCConstants.Input.MAPPING_ROTATE_UP,
+				CCCConstants.Input.MAPPING_ROTATE_DOWN);
 		
 		frEnabled = true;
 	}
@@ -112,16 +115,16 @@ public class CubeAppState extends AbstractAppState {
 		inputManager.removeListener(clickListener);
 		inputManager.removeListener(moveListener);
 		
-		inputManager.deleteMapping(MAPPING_ROTATE);
-		inputManager.deleteMapping(MAPPING_ROTATE_LEFT);
-		inputManager.deleteMapping(MAPPING_ROTATE_RIGHT);
-		inputManager.deleteMapping(MAPPING_ROTATE_UP);
-		inputManager.deleteMapping(MAPPING_ROTATE_DOWN);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_ROTATE);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_ROTATE_LEFT);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_ROTATE_RIGHT);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_ROTATE_UP);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_ROTATE_DOWN);
 		
-		inputManager.deleteMapping(MAPPING_DIRECT_LEFT);
-		inputManager.deleteMapping(MAPPING_DIRECT_RIGHT);
-		inputManager.deleteMapping(MAPPING_DIRECT_UP);
-		inputManager.deleteMapping(MAPPING_DIRECT_DOWN);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_DIRECT_LEFT);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_DIRECT_RIGHT);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_DIRECT_UP);
+		inputManager.deleteMapping(CCCConstants.Input.MAPPING_DIRECT_DOWN);
 	}
 
 	@Override
@@ -184,20 +187,20 @@ public class CubeAppState extends AbstractAppState {
 			if(!isCubeRotating && !isFaceRotating)
 				return;
 
-			if(name.equals(MAPPING_ROTATE_LEFT))
+			if(name.equals(CCCConstants.Input.MAPPING_ROTATE_LEFT))
 				dragX -= value;
-			else if(name.equals(MAPPING_ROTATE_RIGHT))
+			else if(name.equals(CCCConstants.Input.MAPPING_ROTATE_RIGHT))
 				dragX += value;
-			else if(name.equals(MAPPING_ROTATE_UP))
+			else if(name.equals(CCCConstants.Input.MAPPING_ROTATE_UP))
 				dragY += value;
-			else if(name.equals(MAPPING_ROTATE_DOWN))
+			else if(name.equals(CCCConstants.Input.MAPPING_ROTATE_DOWN))
 				dragY -= value;
 		}
 	};
 
 	private ActionListener clickListener = new ActionListener() {
 		public void onAction(String name, boolean keyPressed, float tpf) {
-			if(name.equals(MAPPING_ROTATE)) {
+			if(name.equals(CCCConstants.Input.MAPPING_ROTATE)) {
 				// If rotate trigger was pressed
 				if(keyPressed) {
 					// If face rotation is disabled or a cubie wasn't clicked, rotate whole cube
@@ -244,15 +247,18 @@ public class CubeAppState extends AbstractAppState {
 					isCubeRotating = false;
 				}
 			}
-			else if(!keyPressed && (name.equals(MAPPING_DIRECT_LEFT) || name.equals(MAPPING_DIRECT_RIGHT) || name.equals(MAPPING_DIRECT_UP) || name.equals(MAPPING_DIRECT_DOWN))) {
+			else if(!keyPressed && (name.equals(CCCConstants.Input.MAPPING_DIRECT_LEFT)
+					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_RIGHT)
+					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_UP)
+					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_DOWN))) {
 				// Determine x-y direction based on which arrow key
 				int dirX = 0;
 				int dirY = 0;
-				if(name.equals(MAPPING_DIRECT_LEFT))
+				if(name.equals(CCCConstants.Input.MAPPING_DIRECT_LEFT))
 					dirX = -1;
-				else if(name.equals(MAPPING_DIRECT_RIGHT))
+				else if(name.equals(CCCConstants.Input.MAPPING_DIRECT_RIGHT))
 					dirX = 1;
-				else if(name.equals(MAPPING_DIRECT_UP))
+				else if(name.equals(CCCConstants.Input.MAPPING_DIRECT_UP))
 					dirY = 1;
 				else
 					dirY = -1;
@@ -450,27 +456,5 @@ public class CubeAppState extends AbstractAppState {
 	private float dragY = 0.0f;
 	
 	private boolean frEnabled;
-
-	private final static Trigger TRIGGER_ROTATE = new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
-	private final static Trigger TRIGGER_ROTATE_LEFT = new MouseAxisTrigger(MouseInput.AXIS_X, false);
-	private final static Trigger TRIGGER_ROTATE_RIGHT = new MouseAxisTrigger(MouseInput.AXIS_X, true);
-	private final static Trigger TRIGGER_ROTATE_UP = new MouseAxisTrigger(MouseInput.AXIS_Y, true);
-	private final static Trigger TRIGGER_ROTATE_DOWN = new MouseAxisTrigger(MouseInput.AXIS_Y, false);
 	
-	private final static Trigger TRIGGER_DIRECT_LEFT = new KeyTrigger(KeyInput.KEY_LEFT);
-	private final static Trigger TRIGGER_DIRECT_RIGHT = new KeyTrigger(KeyInput.KEY_RIGHT);
-	private final static Trigger TRIGGER_DIRECT_UP = new KeyTrigger(KeyInput.KEY_UP);
-	private final static Trigger TRIGGER_DIRECT_DOWN = new KeyTrigger(KeyInput.KEY_DOWN);
-
-	private final static String MAPPING_ROTATE = "Rotate Start";
-	private final static String MAPPING_ROTATE_LEFT = "Rotate Left";
-	private final static String MAPPING_ROTATE_RIGHT = "Rotate Right";
-	private final static String MAPPING_ROTATE_UP = "Rotate Up";
-	private final static String MAPPING_ROTATE_DOWN = "Rotate Down";
-	
-	private final static String MAPPING_DIRECT_LEFT = "Direct Left";
-	private final static String MAPPING_DIRECT_RIGHT = "Direct Right";
-	private final static String MAPPING_DIRECT_UP = "Direct Up";
-	private final static String MAPPING_DIRECT_DOWN = "Direct Down";
-
 }
