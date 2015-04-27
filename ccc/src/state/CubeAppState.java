@@ -12,9 +12,11 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.input.controls.Trigger;
@@ -72,8 +74,13 @@ public class CubeAppState extends AbstractAppState {
 		inputManager.addMapping(MAPPING_ROTATE_RIGHT, TRIGGER_ROTATE_RIGHT);
 		inputManager.addMapping(MAPPING_ROTATE_UP, TRIGGER_ROTATE_UP);
 		inputManager.addMapping(MAPPING_ROTATE_DOWN, TRIGGER_ROTATE_DOWN);
+		
+		inputManager.addMapping(MAPPING_DIRECT_LEFT, TRIGGER_DIRECT_LEFT);
+		inputManager.addMapping(MAPPING_DIRECT_RIGHT, TRIGGER_DIRECT_RIGHT);
+		inputManager.addMapping(MAPPING_DIRECT_UP, TRIGGER_DIRECT_UP);
+		inputManager.addMapping(MAPPING_DIRECT_DOWN, TRIGGER_DIRECT_DOWN);
 
-		inputManager.addListener(clickListener, MAPPING_ROTATE);
+		inputManager.addListener(clickListener, MAPPING_ROTATE, MAPPING_DIRECT_LEFT, MAPPING_DIRECT_RIGHT, MAPPING_DIRECT_UP, MAPPING_DIRECT_DOWN);
 		inputManager.addListener(moveListener, MAPPING_ROTATE_LEFT, MAPPING_ROTATE_RIGHT, MAPPING_ROTATE_UP, MAPPING_ROTATE_DOWN);
 		
 		frEnabled = true;
@@ -110,6 +117,11 @@ public class CubeAppState extends AbstractAppState {
 		inputManager.deleteMapping(MAPPING_ROTATE_RIGHT);
 		inputManager.deleteMapping(MAPPING_ROTATE_UP);
 		inputManager.deleteMapping(MAPPING_ROTATE_DOWN);
+		
+		inputManager.deleteMapping(MAPPING_DIRECT_LEFT);
+		inputManager.deleteMapping(MAPPING_DIRECT_RIGHT);
+		inputManager.deleteMapping(MAPPING_DIRECT_UP);
+		inputManager.deleteMapping(MAPPING_DIRECT_DOWN);
 	}
 
 	@Override
@@ -134,49 +146,24 @@ public class CubeAppState extends AbstractAppState {
 		}
 		// If a face is currently rotating
 		else if(isFaceRotating) {
-			// If a face has not yet been chosen
-			if(!isFaceChosen) {
-				// If we are ready to choose a face
-				if(Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f) {
-					isFaceChosen = true;
+			// If a face has not been chosen and we are ready to choose one
+			if(!isFaceChosen && (Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f)) {
+				isFaceChosen = true;
 
-					// Determine which face to rotate
-					Vector3f cross = new Vector3f();
-					chosenNormVector.cross(dragX, dragY, 0.0f, cross);
-
-					final Vector3f upVector = cubeRotator.getUpVector();
-					final Vector3f posVector = cubeRotator.getPosVector();
-					final float[] crossAbs = {Math.abs(cross.dot(upVector.cross(posVector))), Math.abs(cross.dot(upVector)), Math.abs(cross.dot(posVector))};
-					chosenAxis = 0;
-					if(crossAbs[1] > crossAbs[0])
-						chosenAxis = 1;
-					if(crossAbs[2] > crossAbs[chosenAxis])
-						chosenAxis = 2;
-
-					// Populate rotation node
-					int[] lows = {0,0,0};
-					int[] highs = {2,2,2};
-					lows[chosenAxis] = chosenCubiePos[chosenAxis];
-					highs[chosenAxis] = chosenCubiePos[chosenAxis];
-
-					rotationNode.setLocalRotation(new Quaternion());
-					for(int x = lows[0]; x <= highs[0]; ++x)
-						for(int y = lows[1]; y <= highs[1]; ++y)
-							for(int z = lows[2]; z <= highs[2]; ++z)
-								rotationNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
-
-					// Add rotation node back to scene
-					cubeNode.attachChild(rotationNode);
-				}
+				// Determine which face to rotate
+				final Vector3f cross = chosenNormVector.cross(new Vector3f(dragX, dragY, 0.0f));
+				chosenAxis = getChosenRotationAxis(cross, cubeRotator.getUpVector(), cubeRotator.getPosVector());
+				
+				// Move chosen cubies to rotationNode
+				cubeNodeToRotationNode();
 			}
 			// A face has been chosen
 			else {
-				Vector3f cross = new Vector3f();
-				chosenNormVector.cross(dragX, dragY, 0.0f, cross);
-				
+				final Vector3f cross = chosenNormVector.cross(new Vector3f(dragX, dragY, 0.0f));
 				final Vector3f upVector = cubeRotator.getUpVector();
 				final Vector3f posVector = cubeRotator.getPosVector();
-
+				
+				// Physically rotate the currently rotating face
 				final float speedMultiplier = 6.0f;
 				if(chosenAxis == 0)
 					rotationNode.rotate(-cross.dot(upVector.cross(posVector)) * speedMultiplier, 0.0f, 0.0f);
@@ -184,106 +171,14 @@ public class CubeAppState extends AbstractAppState {
 					rotationNode.rotate(0.0f, -cross.dot(upVector) * speedMultiplier, 0.0f);
 				else if(chosenAxis == 2)
 					rotationNode.rotate(0.0f, 0.0f, -cross.dot(posVector) * speedMultiplier);	
-
+				
+				// Reset mouse drags
 				dragX = 0.0f;
 				dragY = 0.0f;
 			}
 		}
 	}
-
-	private ActionListener clickListener = new ActionListener() {
-		public void onAction(String name, boolean keyPressed, float tpf) {
-			if(name.equals(MAPPING_ROTATE)) {
-				// If rotate trigger was pressed
-				if(keyPressed) {
-					// Calculate collisions with cubies
-					Vector2f click2d = inputManager.getCursorPosition();
-					Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0.0f);
-					Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1.0f).subtractLocal(click3d);
-
-					Ray ray = new Ray(click3d, dir);
-					CollisionResults results = new CollisionResults();
-					cubeNode.collideWith(ray, results);
-
-					// If a cubie was clicked
-					if(frEnabled && results.size() != 0) {
-						CollisionResult res = results.getClosestCollision();
-						chosenNormVector = res.getContactNormal();
-
-						Spatial clickedNode = res.getGeometry().getParent();
-						chosenCubiePos[0] = clickedNode.getUserData(Cubie.KEY_X_POS);
-						chosenCubiePos[1] = clickedNode.getUserData(Cubie.KEY_Y_POS);
-						chosenCubiePos[2] = clickedNode.getUserData(Cubie.KEY_Z_POS);
-
-						isFaceRotating = true;
-					}
-					else
-						isCubeRotating = true;
-				}
-				// If rotate trigger was released
-				else {
-					if(isFaceRotating && isFaceChosen) {
-						// Calculate direction and number of rotations
-						Quaternion q = rotationNode.getLocalRotation();
-						Vector3f totalAxis = new Vector3f();
-						float totalRot = q.toAngleAxis(totalAxis);
-
-						int numRots = ((int)((totalRot + FastMath.QUARTER_PI) / FastMath.HALF_PI)) % 4;
-						if(numRots != 0) {
-							boolean cw = totalAxis.get(chosenAxis) < 0.0f;
-							if(chosenCubiePos[chosenAxis] == 0)
-								cw = !cw;
-							if(numRots == 3) {
-								numRots = 1;
-								cw = !cw;
-							}
 	
-							// Logically rotate the face
-							Cubie.Side rotSide = null;
-							if(chosenAxis == 0) {
-								if(chosenCubiePos[0] == 0)
-									rotSide = Cubie.Side.LEFT;
-								else
-									rotSide = Cubie.Side.RIGHT;
-							}
-							else if(chosenAxis == 1) {
-								if(chosenCubiePos[1] == 0)
-									rotSide = Cubie.Side.BOTTOM;
-								else
-									rotSide = Cubie.Side.TOP;
-							}
-							else if(chosenAxis == 2) {
-								if(chosenCubiePos[2] == 0)
-									rotSide = Cubie.Side.BACK;
-								else
-									rotSide = Cubie.Side.FRONT;
-							}
-							if(numRots == 2)
-								cube.rotateFace(new FaceTurn(rotSide, Direction.DOUBLE));
-							else
-								cube.rotateFace(new FaceTurn(rotSide, cw));
-						}
-
-						// Reset all rotation state variables
-						isFaceChosen = false;
-						for(int i = 0; i < 3; ++i)
-							chosenCubiePos[i] = -1;
-						chosenNormVector = null;
-						chosenAxis = -1;
-
-						// Attach nodes cubie nodes back to rootNode
-						while(rotationNode.getQuantity() > 0)
-							cubeNode.attachChild(rotationNode.getChild(0));
-						cubeNode.detachChild(rotationNode);
-					}
-
-					isFaceRotating = false;
-					isCubeRotating = false;
-				}
-			}
-		}
-	};
-
 	private AnalogListener moveListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
 			if(!isCubeRotating && !isFaceRotating)
@@ -299,7 +194,209 @@ public class CubeAppState extends AbstractAppState {
 				dragY -= value;
 		}
 	};
+
+	private ActionListener clickListener = new ActionListener() {
+		public void onAction(String name, boolean keyPressed, float tpf) {
+			if(name.equals(MAPPING_ROTATE)) {
+				// If rotate trigger was pressed
+				if(keyPressed) {
+					// If face rotation is disabled or a cubie wasn't clicked, rotate whole cube
+					if(!frEnabled || !chooseCubieFromMouse())
+						isCubeRotating = true;
+				}
+				// If rotate trigger was released
+				else {
+					if(isFaceRotating && isFaceChosen) {
+						// Calculate total number of rotations
+						final Quaternion q = rotationNode.getLocalRotation();
+						final Vector3f totalAxis = new Vector3f();
+						final float totalRot = q.toAngleAxis(totalAxis);
+						int numRots = ((int)((totalRot + FastMath.QUARTER_PI) / FastMath.HALF_PI)) % 4;
+						
+						// If face rotated at least once
+						if(numRots != 0) {
+							// Calculate rotation direction
+							boolean cw = totalAxis.get(chosenAxis) < 0.0f;
+							if(chosenCubiePos[chosenAxis] == 0)
+								cw = !cw;
+							
+							// Reduce 3 rotations to 1 rotation
+							if(numRots == 3) {
+								numRots = 1;
+								cw = !cw;
+							}
 	
+							// Logically rotate the face
+							final Cubie.Side rotSide = getChosenRotationSide();
+							if(numRots == 2)
+								cube.rotateFace(new FaceTurn(rotSide, Direction.DOUBLE));
+							else
+								cube.rotateFace(new FaceTurn(rotSide, cw));
+						}
+
+						// Reset all rotation state variables
+						resetFaceRotationVars();
+
+						// Attach cubie nodes back to rootNode
+						rotationNodeToCubeNode();
+					}
+
+					isCubeRotating = false;
+				}
+			}
+			else if(!keyPressed && (name.equals(MAPPING_DIRECT_LEFT) || name.equals(MAPPING_DIRECT_RIGHT) || name.equals(MAPPING_DIRECT_UP) || name.equals(MAPPING_DIRECT_DOWN))) {
+				// Determine x-y direction based on which arrow key
+				int dirX = 0;
+				int dirY = 0;
+				if(name.equals(MAPPING_DIRECT_LEFT))
+					dirX = -1;
+				else if(name.equals(MAPPING_DIRECT_RIGHT))
+					dirX = 1;
+				else if(name.equals(MAPPING_DIRECT_UP))
+					dirY = 1;
+				else
+					dirY = -1;
+				
+				// If there was a cubie under the mouse
+				if(chooseCubieFromMouse()) {
+					// Figure out which axis to rotate on
+					final Vector3f cross = chosenNormVector.cross(new Vector3f(dirX, dirY, 0.0f));
+					final Vector3f upVector = cubeRotator.getUpVector();
+					final Vector3f posVector = cubeRotator.getPosVector();
+					chosenAxis = getChosenRotationAxis(cross, upVector, posVector);
+					
+					// Move chosen cubies to rotationNode
+					cubeNodeToRotationNode();
+					
+					// Calculate rotation direction
+					boolean cw = false;
+					if(chosenAxis == 0)
+						cw = cross.dot(upVector.cross(posVector)) < 0.0f;
+					else if(chosenAxis == 1)
+						cw = cross.dot(upVector) < 0.0f;
+					else if(chosenAxis == 2)
+						cw = cross.dot(posVector) < 0.0f;
+					if(chosenCubiePos[chosenAxis] == 0)
+						cw = !cw;
+	
+					// Logically rotate the face
+					final Side rotSide = getChosenRotationSide();
+					cube.rotateFace(new FaceTurn(rotSide, cw));
+	
+					// Reset all rotation state variables
+					resetFaceRotationVars();
+	
+					// Attach cubie nodes back to rootNode
+					rotationNodeToCubeNode();
+				}
+			}
+		}
+	};
+	
+	// Returns collision result for closest cubie under mouse
+	private CollisionResult closestMouseCollision() {
+		Vector2f click2d = inputManager.getCursorPosition();
+		Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0.0f);
+		Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1.0f).subtractLocal(click3d);
+
+		Ray ray = new Ray(click3d, dir);
+		CollisionResults results = new CollisionResults();
+		cubeNode.collideWith(ray, results);
+		
+		if(results.size() == 0)
+			return null;
+		return results.getClosestCollision();
+	}
+	
+	// Chooses closest cubie under mouse
+	private boolean chooseCubieFromMouse() {
+		final CollisionResult res = closestMouseCollision();
+		if(res == null)
+			return false;
+		
+		chosenNormVector = res.getContactNormal();
+		
+		final Spatial clickedNode = res.getGeometry().getParent();
+		chosenCubiePos[0] = clickedNode.getUserData(Cubie.KEY_X_POS);
+		chosenCubiePos[1] = clickedNode.getUserData(Cubie.KEY_Y_POS);
+		chosenCubiePos[2] = clickedNode.getUserData(Cubie.KEY_Z_POS);
+		
+		isFaceRotating = true;
+		
+		return true;
+	}
+	
+	// Reset all rotation state variables
+	private void resetFaceRotationVars() {
+		isFaceRotating = false;
+		isFaceChosen = false;
+		for(int i = 0; i < 3; ++i)
+			chosenCubiePos[i] = -1;
+		chosenNormVector = null;
+		chosenAxis = -1;
+	}
+	
+	// Move rotationNode cubies to cubeNode
+	private void rotationNodeToCubeNode() {
+		while(rotationNode.getQuantity() > 0)
+			cubeNode.attachChild(rotationNode.getChild(0));
+		cubeNode.detachChild(rotationNode);
+	}
+	
+	// Move chosen cubies to rotationNode
+	private void cubeNodeToRotationNode() {
+		int[] lows = {0,0,0};
+		int[] highs = {2,2,2};
+		lows[chosenAxis] = chosenCubiePos[chosenAxis];
+		highs[chosenAxis] = chosenCubiePos[chosenAxis];
+
+		// Populate rotation node
+		rotationNode.setLocalRotation(new Quaternion());
+		for(int x = lows[0]; x <= highs[0]; ++x)
+			for(int y = lows[1]; y <= highs[1]; ++y)
+				for(int z = lows[2]; z <= highs[2]; ++z)
+					rotationNode.attachChild(cube.getCubie(x, y, z).getCenterNode());
+
+		// Add rotation node back to scene
+		cubeNode.attachChild(rotationNode);
+	}
+	
+	private Side getChosenRotationSide() {
+		if(chosenAxis == 0) {
+			if(chosenCubiePos[0] == 0)
+				return Cubie.Side.LEFT;
+			else
+				return Cubie.Side.RIGHT;
+		}
+		else if(chosenAxis == 1) {
+			if(chosenCubiePos[1] == 0)
+				return Cubie.Side.BOTTOM;
+			else
+				return Cubie.Side.TOP;
+		}
+		else if(chosenAxis == 2) {
+			if(chosenCubiePos[2] == 0)
+				return Cubie.Side.BACK;
+			else
+				return Cubie.Side.FRONT;
+		}
+		
+		return null;
+	}
+	
+	// Returns the chosen axis of rotation
+	private int getChosenRotationAxis(final Vector3f crossVector, final Vector3f upVector, final Vector3f posVector) {
+		final float[] crossAbs = {Math.abs(crossVector.dot(upVector.cross(posVector))), Math.abs(crossVector.dot(upVector)), Math.abs(crossVector.dot(posVector))};
+		int axis = 0;
+		if(crossAbs[1] > crossAbs[0])
+			axis = 1;
+		if(crossAbs[2] > crossAbs[axis])
+			axis = 2;
+		
+		return axis;
+	}
+	
+	// Generates and performs random face rotations
 	public void scrambleCube() {
 		final Random random = new Random();
 		final int numMoves = this.sApp.getContext().getSettings().getInteger(CCCConstants.Settings.SCRAMBLE_LENGTH);
@@ -359,11 +456,21 @@ public class CubeAppState extends AbstractAppState {
 	private final static Trigger TRIGGER_ROTATE_RIGHT = new MouseAxisTrigger(MouseInput.AXIS_X, true);
 	private final static Trigger TRIGGER_ROTATE_UP = new MouseAxisTrigger(MouseInput.AXIS_Y, true);
 	private final static Trigger TRIGGER_ROTATE_DOWN = new MouseAxisTrigger(MouseInput.AXIS_Y, false);
+	
+	private final static Trigger TRIGGER_DIRECT_LEFT = new KeyTrigger(KeyInput.KEY_LEFT);
+	private final static Trigger TRIGGER_DIRECT_RIGHT = new KeyTrigger(KeyInput.KEY_RIGHT);
+	private final static Trigger TRIGGER_DIRECT_UP = new KeyTrigger(KeyInput.KEY_UP);
+	private final static Trigger TRIGGER_DIRECT_DOWN = new KeyTrigger(KeyInput.KEY_DOWN);
 
 	private final static String MAPPING_ROTATE = "Rotate Start";
 	private final static String MAPPING_ROTATE_LEFT = "Rotate Left";
 	private final static String MAPPING_ROTATE_RIGHT = "Rotate Right";
 	private final static String MAPPING_ROTATE_UP = "Rotate Up";
 	private final static String MAPPING_ROTATE_DOWN = "Rotate Down";
+	
+	private final static String MAPPING_DIRECT_LEFT = "Direct Left";
+	private final static String MAPPING_DIRECT_RIGHT = "Direct Right";
+	private final static String MAPPING_DIRECT_UP = "Direct Up";
+	private final static String MAPPING_DIRECT_DOWN = "Direct Down";
 
 }
