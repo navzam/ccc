@@ -12,6 +12,7 @@ public final class CCCConstants {
 	public final static class Settings {
 		public final static String SCRAMBLE_LENGTH = "scramble_length";
 		public final static String CUBE_ROTATION_TYPE = "cr_type";
+		public final static String FACE_ROTATION_TYPE = "fr_type";
 	}
 	
 	public final static class Nifty {
@@ -30,6 +31,8 @@ public final class CCCConstants {
 		public final static String FIELD_SCRAMBLE = "scr_field";
 		public final static String RADIO_FREE_ROTATION = "opt_fr";
 		public final static String RADIO_TT_ROTATION = "opt_tt";
+		public final static String RADIO_CAD_ROTATION = "opt_cad";
+		public final static String RADIO_PAD_ROTATION = "opt_pad";
 	}
 	
 	public final static class Input {

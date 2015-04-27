@@ -22,6 +22,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.system.AppSettings;
 
 import cube.AbstractRotator;
 import cube.Cube;
@@ -54,12 +55,17 @@ public class CubeAppState extends AbstractAppState {
 		
 		sApp.getRootNode().attachChild(this.cubeNode);
 		
+		final AppSettings settings = sApp.getContext().getSettings();
+		
 		// Set cube rotator
-		AbstractRotator.CubeRotationType crType = (AbstractRotator.CubeRotationType) sApp.getContext().getSettings().get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
+		AbstractRotator.CubeRotationType crType = (AbstractRotator.CubeRotationType) settings.get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
 		if(crType == AbstractRotator.CubeRotationType.FREE)
 			cubeRotator = new FreeRotator(cubeNode);
 		else
 			cubeRotator = new TurntableRotator(cubeNode);
+		
+		// Set face rotation type
+		isClickAndDrag = settings.getBoolean(CCCConstants.Settings.FACE_ROTATION_TYPE);
 	}
 
 	private void initInput() {
@@ -147,8 +153,8 @@ public class CubeAppState extends AbstractAppState {
 			dragX = 0.0f;
 			dragY = 0.0f;
 		}
-		// If a face is currently rotating
-		else if(isFaceRotating) {
+		// If a face is currently being dragged
+		else if(isClickAndDrag && isFaceRotating) {
 			// If a face has not been chosen and we are ready to choose one
 			if(!isFaceChosen && (Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f)) {
 				isFaceChosen = true;
@@ -204,11 +210,11 @@ public class CubeAppState extends AbstractAppState {
 				// If rotate trigger was pressed
 				if(keyPressed) {
 					// If face rotation is disabled or a cubie wasn't clicked, rotate whole cube
-					if(!frEnabled || !chooseCubieFromMouse())
+					if(!frEnabled || !isClickAndDrag || !chooseCubieFromMouse())
 						isCubeRotating = true;
 				}
-				// If rotate trigger was released
-				else {
+				// If rotate trigger was released and isClickAndDrag
+				else if(isClickAndDrag) {
 					if(isFaceRotating && isFaceChosen) {
 						// Calculate total number of rotations
 						final Quaternion q = rotationNode.getLocalRotation();
@@ -246,8 +252,10 @@ public class CubeAppState extends AbstractAppState {
 
 					isCubeRotating = false;
 				}
+				else
+					isCubeRotating = false;
 			}
-			else if(!keyPressed && (name.equals(CCCConstants.Input.MAPPING_DIRECT_LEFT)
+			else if(!isClickAndDrag && !keyPressed && (name.equals(CCCConstants.Input.MAPPING_DIRECT_LEFT)
 					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_RIGHT)
 					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_UP)
 					|| name.equals(CCCConstants.Input.MAPPING_DIRECT_DOWN))) {
@@ -451,6 +459,7 @@ public class CubeAppState extends AbstractAppState {
 	private Node rotationNode = new Node();
 
 	private AbstractRotator cubeRotator;
+	private boolean isClickAndDrag;
 
 	private float dragX = 0.0f;
 	private float dragY = 0.0f;

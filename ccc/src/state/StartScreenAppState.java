@@ -110,6 +110,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		// Retrieve current game settings
 		final int scramLen = settings.getInteger(CCCConstants.Settings.SCRAMBLE_LENGTH);
 		AbstractRotator.CubeRotationType crType = (AbstractRotator.CubeRotationType)settings.get(CCCConstants.Settings.CUBE_ROTATION_TYPE);
+		boolean isClickAndDrag = settings.getBoolean(CCCConstants.Settings.FACE_ROTATION_TYPE);
 		
 		// Populate fullscreen and vsync checkboxes
 		screen.findNiftyControl(CCCConstants.Nifty.CHECKBOX_FULLSCREEN, CheckBox.class).setChecked(isFullscreen);
@@ -139,6 +140,10 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 			screen.findNiftyControl(CCCConstants.Nifty.RADIO_FREE_ROTATION, RadioButton.class).select();
 		else
 			screen.findNiftyControl(CCCConstants.Nifty.RADIO_TT_ROTATION, RadioButton.class).select();
+		if(isClickAndDrag)
+			screen.findNiftyControl(CCCConstants.Nifty.RADIO_CAD_ROTATION, RadioButton.class).select();
+		else
+			screen.findNiftyControl(CCCConstants.Nifty.RADIO_PAD_ROTATION, RadioButton.class).select();
 	}
 	
 	private ArrayList<DisplayMode> getDisplayModes() {
@@ -205,10 +210,15 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 			System.err.println("Scramble length is not a valid integer!");
 		}
 		
-		// Retrieve selected rotation type
+		// Retrieve selected cube rotation type
 		AbstractRotator.CubeRotationType crType = AbstractRotator.CubeRotationType.FREE;
 		if(screen.findNiftyControl(CCCConstants.Nifty.RADIO_TT_ROTATION, RadioButton.class).isActivated())
 			crType = AbstractRotator.CubeRotationType.TURNTABLE;
+		
+		// Retrieve selected face rotation type
+		boolean isClickAndDrag = false;
+		if(screen.findNiftyControl(CCCConstants.Nifty.RADIO_CAD_ROTATION, RadioButton.class).isActivated())
+			isClickAndDrag = true;
 		
 		AppSettings settings = sApp.getContext().getSettings();
 		
@@ -222,6 +232,7 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		// Apply game settings
 		settings.putInteger(CCCConstants.Settings.SCRAMBLE_LENGTH, scramLen);
 		settings.put(CCCConstants.Settings.CUBE_ROTATION_TYPE, crType);
+		settings.putBoolean(CCCConstants.Settings.FACE_ROTATION_TYPE, isClickAndDrag);
 		sApp.setSettings(settings);
 		sApp.restart();
 	}

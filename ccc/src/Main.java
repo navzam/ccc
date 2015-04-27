@@ -22,6 +22,7 @@ public class Main extends SimpleApplication {
 		settings.setVSync(true);
 		settings.putInteger(CCCConstants.Settings.SCRAMBLE_LENGTH, 100);
 		settings.put(CCCConstants.Settings.CUBE_ROTATION_TYPE, AbstractRotator.CubeRotationType.FREE);
+		settings.putBoolean(CCCConstants.Settings.FACE_ROTATION_TYPE, true);
 		
 		// Create application and start it
 		Main app = new Main();
