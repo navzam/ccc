@@ -155,16 +155,19 @@ public class CubeAppState extends AbstractAppState {
 		}
 		// If a face is currently being dragged
 		else if(isClickAndDrag && isFaceRotating) {
-			// If a face has not been chosen and we are ready to choose one
-			if(!isFaceChosen && (Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f)) {
-				isFaceChosen = true;
-
-				// Determine which face to rotate
-				final Vector3f cross = chosenNormVector.cross(new Vector3f(dragX, dragY, 0.0f));
-				chosenAxis = getChosenRotationAxis(cross, cubeRotator.getUpVector(), cubeRotator.getPosVector());
-				
-				// Move chosen cubies to rotationNode
-				cubeNodeToRotationNode();
+			// If a face has not been chosen
+			if(!isFaceChosen) {
+				// If we are ready to choose a face
+				if(Math.abs(dragX) > 0.01f || Math.abs(dragY) > 0.01f) {
+					isFaceChosen = true;
+	
+					// Determine which face to rotate
+					final Vector3f cross = chosenNormVector.cross(new Vector3f(dragX, dragY, 0.0f));
+					chosenAxis = getChosenRotationAxis(cross, cubeRotator.getUpVector(), cubeRotator.getPosVector());
+					
+					// Move chosen cubies to rotationNode
+					cubeNodeToRotationNode();
+				}
 			}
 			// A face has been chosen
 			else {
