@@ -28,6 +28,8 @@ public class Main extends SimpleApplication {
 		Main app = new Main();
 		app.setSettings(settings);
 		app.setShowSettings(false);
+		app.setDisplayFps(false);
+		app.setDisplayStatView(false);
 		app.start();
 	}
 

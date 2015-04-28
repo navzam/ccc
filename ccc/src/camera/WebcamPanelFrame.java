@@ -84,7 +84,7 @@ public class WebcamPanelFrame extends JFrame implements AutoCloseable, WebcamLis
             }
         });
         panel = new WebcamPanel(webcam, size, false);
-        panel.setFPSDisplayed(true);
+        panel.setFPSDisplayed(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         instructionsLabel = new JLabel(instructionStrs[0]);
