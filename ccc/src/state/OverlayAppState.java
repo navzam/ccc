@@ -39,30 +39,22 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		Element buttonSolve = screen.findElementByName(CCCConstants.Nifty.BUTTON_SOLVE);
 		Element buttonNext = screen.findElementByName(CCCConstants.Nifty.BUTTON_NEXT);
 		Element buttonPrev = screen.findElementByName(CCCConstants.Nifty.BUTTON_PREV);
+		
+		textTime.setVisible(false);
+		textSolution.setVisible(false);
+		buttonSolve.setVisible(false);
+		buttonNext.setVisible(false);
+		buttonPrev.setVisible(false);
+		
 		if(this.currMode == OverlayMode.FREE_PLAY) {
-			textTime.setVisible(false);
-			textSolution.setVisible(false);
-			buttonSolve.setVisible(false);
-			buttonNext.setVisible(false);
-			buttonPrev.setVisible(false);
 		}
 		else if(this.currMode == OverlayMode.TIMED_PLAY) {
 			textTime.setVisible(true);
-			textSolution.setVisible(false);
-			buttonSolve.setVisible(false);
-			buttonNext.setVisible(false);
-			buttonPrev.setVisible(false);
 			
 			updateTextTime(0);
 		}
 		else if(this.currMode == OverlayMode.OPTIMAL_MODE) {
-			textTime.setVisible(false);
-			textSolution.setVisible(true);
 			buttonSolve.setVisible(true);
-			buttonNext.setVisible(true);
-			buttonPrev.setVisible(true);
-			
-			updateTextSolution("");
 		}
 		
 		cubeState = sApp.getStateManager().getState(CubeAppState.class);
@@ -111,7 +103,7 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 			stopWatch.start();
 		else if(currMode == OverlayMode.OPTIMAL_MODE) {
 			cubeState.enableFaceRotation(true);
-			updateTextSolution("");
+			setSolutionElementsVisible(false);
 		}
 	}
 	
@@ -122,15 +114,17 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		final String solStr = cubeState.solveCube();
 		updateTextSolution(solStr);
 		
+		// Make solution text and next and prev buttons visible
+		setSolutionElementsVisible(true);
+		
 		faceTurns = FaceTurn.getFaceTurns(solStr);
 		turnNum = -1;
+		highlightIndex = 9;
 	}
 	
 	public void scanCube() {
-		System.out.println("Scan cube");
 		final camera.WebcamPanelFrame frame = new camera.WebcamPanelFrame();
 		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
 		// TODO: Make this threaded instead of sleeping!
@@ -141,6 +135,9 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 				e.printStackTrace();
 			}
 		}
+		
+		cubeState.enableFaceRotation(true);
+		setSolutionElementsVisible(false);
 		
 		final String scannedDefStr = frame.getResult();
 		System.out.println("scanCube() produced def string: " + scannedDefStr);
@@ -196,6 +193,14 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		--turnNum;
 	}
 	
+	public void backToMenu() {
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		StartScreenAppState startScreenState = (StartScreenAppState)niftyState.loadScreen(CCCConstants.Nifty.SCREEN_START);
+		sApp.getStateManager().detach(this.cubeState);
+		sApp.getStateManager().detach(this);
+		sApp.getStateManager().attach(startScreenState);
+	}
+	
 	public void setOverlayMode(OverlayMode mode) {
 		currMode = mode;
 	}
@@ -210,7 +215,9 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 	}
 	
 	private void updateTextSolution(String sol) {
-		textSolution.getRenderer(TextRenderer.class).setText("Solution: " + sol);
+		TextRenderer rend = textSolution.getRenderer(TextRenderer.class);
+		rend.setSelection(0, 0);
+		rend.setText("Solution: " + sol);
 	}
 	
 	private void updateTextSolutionHighlight() {
@@ -219,6 +226,14 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		rend.setTextSelectionColor(new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		rend.setSelection(9, highlightIndex);
 		rend.setTextSelectionColor(new Color(0.65f, 0.65f, 0.65f, 1.0f));
+	}
+	
+	private void setSolutionElementsVisible(boolean visible) {
+		NiftyAppState niftyState = sApp.getStateManager().getState(NiftyAppState.class);
+		Screen screen = niftyState.getScreen(CCCConstants.Nifty.SCREEN_OVERLAY);
+		screen.findElementByName(CCCConstants.Nifty.TEXT_SOLUTION).setVisible(visible);
+		screen.findElementByName(CCCConstants.Nifty.BUTTON_NEXT).setVisible(visible);
+		screen.findElementByName(CCCConstants.Nifty.BUTTON_PREV).setVisible(visible);
 	}
 	
 	private SimpleApplication sApp;
