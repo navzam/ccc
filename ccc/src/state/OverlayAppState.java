@@ -1,5 +1,8 @@
 package state;
+
 import java.util.ArrayList;
+
+import org.kociemba.twophase.Search;
 
 import util.CCCConstants;
 import util.StopWatch;
@@ -121,6 +124,50 @@ public class OverlayAppState extends AbstractAppState implements ScreenControlle
 		
 		faceTurns = FaceTurn.getFaceTurns(solStr);
 		turnNum = -1;
+	}
+	
+	public void scanCube() {
+		System.out.println("Scan cube");
+		final camera.WebcamPanelFrame frame = new camera.WebcamPanelFrame();
+		frame.setLocationRelativeTo(null);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		
+		// TODO: Make this threaded instead of sleeping!
+		while(frame.isVisible()) {
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		final String scannedDefStr = frame.getResult();
+		System.out.println("scanCube() produced def string: " + scannedDefStr);
+		
+		// Solve the cube from the scanned state
+		final String solScanned = Search.solution(scannedDefStr, 21, 5, false);
+		if(solScanned.startsWith("Error")) {
+			System.err.println("Scanned cube is invalid!");
+			return;
+		}
+		final ArrayList<FaceTurn> turnsToSolveScanned = FaceTurn.getFaceTurns(solScanned);
+		
+		// Solve the cube from its current state
+		final String solCurrent = this.cubeState.solveCube();
+		final ArrayList<FaceTurn> turnsToSolveCurrent = FaceTurn.getFaceTurns(solCurrent);
+		
+		// Turns to create scanned state
+		final ArrayList<FaceTurn> turnsToCreateScanned = new ArrayList<FaceTurn>(turnsToSolveCurrent);
+		for(int i = turnsToSolveScanned.size() - 1; i >= 0; --i)
+			turnsToCreateScanned.add(FaceTurn.reversed(turnsToSolveScanned.get(i)));
+		
+		// Print the turns to create scanned state
+		System.out.println(turnsToCreateScanned.toString());
+		
+		// Perform the turns to create scanned state
+		for(int i = 0; i < turnsToCreateScanned.size(); ++i)
+			cubeState.rotateFace(turnsToCreateScanned.get(i));
 	}
 	
 	public void nextTurn() {

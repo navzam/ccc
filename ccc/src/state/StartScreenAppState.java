@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import util.CCCConstants;
-import util.CCCConstants.Settings;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;

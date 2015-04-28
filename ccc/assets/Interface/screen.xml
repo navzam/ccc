@@ -130,6 +130,9 @@
 				<control name="button" label="Scramble" id="button_scramble" align="right" valign="top">
 					<interact onClick="scrambleCube()" />
 				</control>
+				<control name="button" label="Scan" id="button_scan" align="right" valign="top">
+					<interact onClick="scanCube()" />
+				</control>
 			</panel>
 		</layer>
 	</screen>
