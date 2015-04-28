@@ -165,8 +165,10 @@ public class StartScreenAppState extends AbstractAppState implements ScreenContr
 		for(int i = 0; i < modesList.size() - 1; ++i) {
 			DisplayMode dm1 = modesList.get(i);
 			DisplayMode dm2 = modesList.get(i + 1);
-			if(dm1.getWidth() == dm2.getWidth() && dm1.getHeight() == dm2.getHeight())
+			if(dm1.getWidth() == dm2.getWidth() && dm1.getHeight() == dm2.getHeight()) {
 				modesList.remove(i + 1);
+				--i;
+			}
 		}
 		
 		return modesList;
