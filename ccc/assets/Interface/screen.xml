@@ -21,6 +21,7 @@
 				<control name="button" label="Settings" id="button_settings" align="center" valign="center">
 					<interact onClick="openSettings()" />
 				</control>
+				<control name="button" label="Help" id="button_help" align="center" valign="center" />
 				<control name="button" label="Quit" id="button_quit" align="center" valign="center">
 					<interact onClick="quitGame()" />
 				</control>
