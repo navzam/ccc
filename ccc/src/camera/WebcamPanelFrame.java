@@ -61,7 +61,7 @@ public class WebcamPanelFrame extends JFrame implements AutoCloseable, WebcamLis
     public WebcamPanelFrame()  {
         Dimension size = WebcamResolution.QVGA.getSize();
 
-        setTitle("Scan");
+        setTitle("Scan Cube");
         setSize(size.width * 2, size.height * 2);
 
         webcam = Webcam.getDefault();
